@@ -1,29 +1,13 @@
-import day1input from './inputs/day1input';
+import fs from 'fs';
 
 const day1 = () => {
   console.log('day1...');
-  const input = day1input;
-  //   console.log(
-  //     input.split(`
-
-  // `)[0]
-  //   );
+  const input = fs.readFileSync('./inputs/day1input', 'utf-8');
   const allCalories = input
-    .split(
-      `
-
-`
-    )
-    .reduce(
-      (acc, elfCalories) => [
-        ...acc,
-        elfCalories.split(`
-`),
-      ],
-      []
-    );
+    .split(`\r\n\r\n`)
+    .reduce((acc, elfCalories) => [...acc, elfCalories.split(`\r\n`)], []);
   const firstElfCalories = allCalories[0];
-  console.log(firstElfCalories);
+  console.log('firstElfCalories', firstElfCalories);
   const totals = allCalories.reduce(
     (acc, elfCalories) => [
       ...acc,
