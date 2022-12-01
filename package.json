@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Advent Of Code 2022",
   "main": "index.js",
+  "type": "module",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon --exec node_modules/.bin/babel-node --experimental-modules --es-module-specifier-resolution=node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -16,5 +17,12 @@
   "bugs": {
     "url": "https://github.com/Bomberlt/AdventOfCode2022/issues"
   },
-  "homepage": "https://github.com/Bomberlt/AdventOfCode2022#readme"
+  "homepage": "https://github.com/Bomberlt/AdventOfCode2022#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.5",
+    "@babel/node": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "nodemon": "^2.0.20"
+  }
 }
