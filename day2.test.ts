@@ -1,21 +1,21 @@
-import day2, { getYourMove, Move, Outcome, day2part2 } from './day2';
+import day2, { getYourShape, Shape, Outcome, day2part2 } from './day2';
 
 describe('day2', () => {
-  describe('getYourMove', () => {
+  describe('getYourShape', () => {
     describe('when opponent move is Rock', () => {
-      const opMove = Move.Rock;
+      const opMove = Shape.Rock;
       describe('and outcome is Draw', () => {
         const outcome = Outcome.Draw;
         it('should return Rock', () => {
-          const result = getYourMove(opMove, outcome);
+          const result = getYourShape(opMove, outcome);
 
-          expect(result).toBe(Move.Rock);
+          expect(result).toBe(Shape.Rock);
         });
       });
     });
   });
 
-  describe(`example1:
+  describe(`example strategy guide:
 A Y
 B X
 C Z`, () => {

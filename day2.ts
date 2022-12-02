@@ -1,4 +1,4 @@
-export enum Move {
+export enum Shape {
   Rock = 1,
   Paper,
   Scissors,
@@ -10,35 +10,35 @@ export enum Outcome {
   Win = 6,
 }
 
-const translateOpponentMove = (letter: string): Move => {
+const decryptOpponentShape = (letter: string): Shape => {
   switch (letter) {
     case 'A':
-      return Move.Rock;
+      return Shape.Rock;
     case 'B':
-      return Move.Paper;
+      return Shape.Paper;
     case 'C':
-      return Move.Scissors;
+      return Shape.Scissors;
     default:
       console.log('Cant parse letter:', letter);
       break;
   }
 };
 
-const translateYourMove = (letter: string): Move => {
+const decryptYourShape = (letter: string): Shape => {
   switch (letter) {
     case 'X':
-      return Move.Rock;
+      return Shape.Rock;
     case 'Y':
-      return Move.Paper;
+      return Shape.Paper;
     case 'Z':
-      return Move.Scissors;
+      return Shape.Scissors;
     default:
       console.log('Cant parse letter:', letter);
       break;
   }
 };
 
-const translateOutcome = (letter: string): Outcome => {
+const decryptOutcome = (letter: string): Outcome => {
   switch (letter) {
     case 'X':
       return Outcome.Lose;
@@ -53,83 +53,81 @@ const translateOutcome = (letter: string): Outcome => {
 };
 
 interface OneRound {
-  op: Move;
-  your: Move;
+  op: Shape;
+  your: Shape;
   score: number;
 }
 
-const getOutcome = (opponentMove: Move, yourMove: Move): Outcome => {
-  if (opponentMove === yourMove) {
+const getOutcome = (opponentShape: Shape, yourShape: Shape): Outcome => {
+  if (opponentShape === yourShape) {
     return Outcome.Draw;
   }
   if (
-    (yourMove === Move.Paper && opponentMove === Move.Rock) ||
-    (yourMove === Move.Rock && opponentMove === Move.Scissors) ||
-    (yourMove === Move.Scissors && opponentMove === Move.Paper)
+    (yourShape === Shape.Paper && opponentShape === Shape.Rock) ||
+    (yourShape === Shape.Rock && opponentShape === Shape.Scissors) ||
+    (yourShape === Shape.Scissors && opponentShape === Shape.Paper)
   ) {
     return Outcome.Win;
   }
   return Outcome.Lose;
 };
 
-export const getYourMove = (opponentMove: Move, outcome: Outcome): Move => {
+export const getYourShape = (opponentShape: Shape, outcome: Outcome): Shape => {
   if (outcome === Outcome.Draw) {
-    return opponentMove;
+    return opponentShape;
   }
 
   if (outcome === Outcome.Win) {
-    switch (opponentMove) {
-      case Move.Rock:
-        return Move.Paper;
-      case Move.Paper:
-        return Move.Scissors;
-      case Move.Scissors:
-        return Move.Rock;
+    switch (opponentShape) {
+      case Shape.Rock:
+        return Shape.Paper;
+      case Shape.Paper:
+        return Shape.Scissors;
+      case Shape.Scissors:
+        return Shape.Rock;
     }
   }
-  switch (opponentMove) {
-    case Move.Rock:
-      return Move.Scissors;
-    case Move.Paper:
-      return Move.Rock;
-    case Move.Scissors:
-      return Move.Paper;
+  switch (opponentShape) {
+    case Shape.Rock:
+      return Shape.Scissors;
+    case Shape.Paper:
+      return Shape.Rock;
+    case Shape.Scissors:
+      return Shape.Paper;
   }
 };
 
-export const day2 = (input: string): number => {
-  const rounds: Array<OneRound> = input
+export const day2 = (encryptedStrategyGuide: string): number => {
+  const rounds: Array<OneRound> = encryptedStrategyGuide
     .replace(/\r/g, '')
     .split(`\n`)
     .map((letters) => {
-      const opponentMove = translateOpponentMove(letters.split(' ')[0]);
-      const yourMove = translateYourMove(letters.split(' ')[1]);
-      const outcome = getOutcome(opponentMove, yourMove);
+      let opponentShape = decryptOpponentShape(letters.split(' ')[0]);
+      const yourShape = decryptYourShape(letters.split(' ')[1]);
+      const outcome = getOutcome(opponentShape, yourShape);
       return {
-        op: opponentMove,
-        your: yourMove,
-        score: yourMove + outcome,
+        op: opponentShape,
+        your: yourShape,
+        score: yourShape + outcome,
       };
     });
-  const totalScore = rounds.reduce((acc, round) => acc + round.score, 0);
-  return totalScore;
+  return rounds.reduce((acc, round) => acc + round.score, 0);
 };
 
-export const day2part2 = (input: string): number => {
-  const rounds: Array<OneRound> = input
+export const day2part2 = (encryptedStrategyGuide: string): number => {
+  const rounds: Array<OneRound> = encryptedStrategyGuide
     .replace(/\r/g, '')
     .split(`\n`)
     .map((letters) => {
-      const opponentMove = translateOpponentMove(letters.split(' ')[0]);
-      const outcome = translateOutcome(letters.split(' ')[1]);
-      const yourMove = getYourMove(opponentMove, outcome);
+      const opponentShape = decryptOpponentShape(letters.split(' ')[0]);
+      const outcome = decryptOutcome(letters.split(' ')[1]);
+      const yourShape = getYourShape(opponentShape, outcome);
       return {
-        op: opponentMove,
-        your: yourMove,
-        score: yourMove + outcome,
+        op: opponentShape,
+        your: yourShape,
+        score: yourShape + outcome,
       };
     });
-  const totalScore = rounds.reduce((acc, round) => acc + round.score, 0);
-  return totalScore;
+  return rounds.reduce((acc, round) => acc + round.score, 0);
 };
 export default day2;
