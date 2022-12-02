@@ -1,12 +1,12 @@
 import fs from 'fs';
 
-enum Move {
+export enum Move {
   Rock = 1,
   Paper,
   Scissors,
 }
 
-enum Outcome {
+export enum Outcome {
   Lose = 0,
   Draw = 3,
   Win = 6,
@@ -71,7 +71,7 @@ const getOutcome = (opponentMove: Move, yourMove: Move): Outcome => {
   return Outcome.Lose;
 };
 
-const getYourMove = (opponentMove: Move, outcome: Outcome): Move => {
+export const getYourMove = (opponentMove: Move, outcome: Outcome): Move => {
   if (outcome === Outcome.Draw) {
     return opponentMove;
   }
