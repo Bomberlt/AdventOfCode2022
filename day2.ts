@@ -38,16 +38,14 @@ const translateYourMove = (letter: string): Move => {
   }
 };
 
-const translateYourWin = (letter: string): Move => {
-  switch (
-    letter // TODO: return outcome
-  ) {
+const translateOutcome = (letter: string): Outcome => {
+  switch (letter) {
     case 'X':
-      return Move.Rock;
+      return Outcome.Lose;
     case 'Y':
-      return Move.Paper;
+      return Outcome.Draw;
     case 'Z':
-      return Move.Scissors;
+      return Outcome.Win;
     default:
       break;
   }
@@ -73,6 +71,31 @@ const getOutcome = (opponentMove: Move, yourMove: Move): Outcome => {
   return Outcome.Lose;
 };
 
+const getYourMove = (opponentMove: Move, outcome: Outcome): Move => {
+  if (outcome === Outcome.Draw) {
+    return opponentMove;
+  }
+
+  if (outcome === Outcome.Win) {
+    switch (opponentMove) {
+      case Move.Rock:
+        return Move.Paper;
+      case Move.Paper:
+        return Move.Scissors;
+      case Move.Scissors:
+        return Move.Rock;
+    }
+  }
+  switch (opponentMove) {
+    case Move.Rock:
+      return Move.Scissors;
+    case Move.Paper:
+      return Move.Rock;
+    case Move.Scissors:
+      return Move.Paper;
+  }
+};
+
 export const day2 = () => {
   const input = fs.readFileSync('./inputs/day2input', 'utf-8');
   const rounds: Array<OneRound> = input.split(`\r\n`).map((letters) => {
@@ -89,16 +112,19 @@ export const day2 = () => {
   return totalScore;
 };
 
-// export const day2part2 = () => {
-//   const input = fs.readFileSync('./inputs/day2input', 'utf-8');
-//   const rounds: Array<OneRound> = input.split(`\r\n`).map((letters) => {
-//     const opponentMove = translateOpponentMove(letters.split(' ')[0]);
-//     const yourMove = translateYourWin(letters.split(' ')[1]);
-//     return {
-//       op: opponentMove,
-//       your: yourMove,
-//       score: calcScore(opponentMove, yourMove),
-//     };
-//   });
-// };
+export const day2part2 = () => {
+  const input = fs.readFileSync('./inputs/day2input', 'utf-8');
+  const rounds: Array<OneRound> = input.split(`\r\n`).map((letters) => {
+    const opponentMove = translateOpponentMove(letters.split(' ')[0]);
+    const outcome = translateOutcome(letters.split(' ')[1]);
+    const yourMove = getYourMove(opponentMove, outcome);
+    return {
+      op: opponentMove,
+      your: yourMove,
+      score: yourMove + outcome,
+    };
+  });
+  const totalScore = rounds.reduce((acc, round) => acc + round.score, 0);
+  return totalScore;
+};
 export default day2;
