@@ -1,5 +1,3 @@
-import { group } from 'console';
-
 export const day3 = (contentsOfRucksacks: string): number => {
   const rucksacks = contentsOfRucksacks.replace(/\r/g, '').split(`\n`);
   return rucksacks.reduce(
@@ -37,10 +35,11 @@ export const findBadge = (threeRucksacks: string[]): string => {
   const commonInFirstTwo = itemsInFirst.filter((item) =>
     itemsInSecond.includes(item)
   );
-  return commonInFirstTwo.find((item) => itemsInThird.includes(item));
+  const badge = commonInFirstTwo.find((item) => itemsInThird.includes(item));
+  return badge;
 };
 
-export const groupRucksacs = (rucksacks: string[]): string[] => {
+export const groupRucksacs = (rucksacks: string[]): Array<Array<string>> => {
   return rucksacks.reduce((acc, rucksack, currentIndex) => {
     if (currentIndex % 3 === 0) {
       return [...acc, [rucksack]];

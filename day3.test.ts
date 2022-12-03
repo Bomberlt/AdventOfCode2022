@@ -122,6 +122,14 @@ describe('day3', () => {
 
         expect(groups.length).toBe(2);
       });
+      it('should return two groups with three rucksacks each', () => {
+        const groups = groupRucksacs(rucksacks);
+
+        console.log('groups[0]');
+        console.log(groups[0]);
+        expect(groups[0].length).toBe(3);
+        expect(groups[1].length).toBe(3);
+      });
     });
   });
 
