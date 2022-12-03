@@ -18,6 +18,14 @@ describe('day3', () => {
         expect(answer).toBe('L');
       });
     });
+    describe('rucksack contains the items PmmdzqPrVvPwwTWBwg', () => {
+      const input = 'PmmdzqPrVvPwwTWBwg';
+      it('answer is uppercase P', () => {
+        const answer = containsInBoth(input);
+
+        expect(answer).toBe('P');
+      });
+    });
   });
 
   describe('convertItemToPriority', () => {
@@ -62,9 +70,12 @@ PmmdzqPrVvPwwTWBwg
 wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
 ttgJtRGJQctTZtZT
 CrZsJsPPZsGzwwsLwLmpwMDw`, () => {
-    const exampleInput = `A Y
-B X
-C Z`;
+    const exampleInput = `vJrwpWtwJgWrhcsFMMfFFhFp
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw`;
     describe('for day3', () => {
       it('should return 157', () => {
         const result = day3(exampleInput);
