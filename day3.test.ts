@@ -1,5 +1,5 @@
 import day3, {
-  containsInBoth,
+  containsInBothCompartments,
   convertItemToPriority,
   day3part2,
   findBadge,
@@ -11,7 +11,7 @@ describe('day3', () => {
     describe('rucksack contains the items vJrwpWtwJgWrhcsFMMfFFhFp', () => {
       const input = 'vJrwpWtwJgWrhcsFMMfFFhFp';
       it('answer is lowercase p', () => {
-        const answer = containsInBoth(input);
+        const answer = containsInBothCompartments(input);
 
         expect(answer).toBe('p');
       });
@@ -19,7 +19,7 @@ describe('day3', () => {
     describe('rucksack contains the items jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL', () => {
       const input = 'jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL';
       it('answer is uppercase L', () => {
-        const answer = containsInBoth(input);
+        const answer = containsInBothCompartments(input);
 
         expect(answer).toBe('L');
       });
@@ -27,7 +27,7 @@ describe('day3', () => {
     describe('rucksack contains the items PmmdzqPrVvPwwTWBwg', () => {
       const input = 'PmmdzqPrVvPwwTWBwg';
       it('answer is uppercase P', () => {
-        const answer = containsInBoth(input);
+        const answer = containsInBothCompartments(input);
 
         expect(answer).toBe('P');
       });

@@ -1,13 +1,40 @@
-export const day3 = (contentsOfRucksacks: string): number => {
+// https://unicode.org/emoji/charts/full-emoji-list.html
+let emojiStart = 0x1f347;
+
+const translateGroupToEmojiFruit = (group: string[]) => {
+  return group.map(translateRucksackToEmojiFruit);
+};
+const translateRucksackToEmojiFruit = (rucksack: string) => {
+  return rucksack.split('').map(translateItemToEmojiFruit).join('');
+};
+const translateItemToEmojiFruit = (item: string) => {
+  return translatePriorityToEmojiFruit(convertItemToPriority(item));
+};
+const translatePriorityToEmojiFruit = (priority: number) => {
+  return String.fromCodePoint(emojiStart + priority);
+};
+
+export const day3 = (
+  contentsOfRucksacks: string,
+  verbal: boolean | undefined
+): number => {
   const rucksacks = contentsOfRucksacks.replace(/\r/g, '').split(`\n`);
-  return rucksacks.reduce(
-    (acc, rucksack) => acc + convertItemToPriority(containsInBoth(rucksack)),
-    0
-  );
+  if (verbal) console.log('rucksacks:');
+  if (verbal) console.log(rucksacks.map(translateRucksackToEmojiFruit));
+  return rucksacks.reduce((acc, rucksack) => {
+    if (verbal)
+      console.log(
+        'Checking rucksack for item in both compartments:',
+        translateRucksackToEmojiFruit(rucksack)
+      );
+    const item = containsInBothCompartments(rucksack);
+    if (verbal) console.log('Item found: ', translateItemToEmojiFruit(item));
+    return acc + convertItemToPriority(item);
+  }, 0);
 };
 export default day3;
 
-export const containsInBoth = (rucksack: string): string => {
+export const containsInBothCompartments = (rucksack: string): string => {
   const middle = rucksack.length / 2;
   const firstCompartment = rucksack.substring(0, middle).split('');
   const secondCompartment = rucksack.substring(middle).split('');
@@ -51,11 +78,27 @@ export const groupRucksacs = (rucksacks: string[]): Array<Array<string>> => {
   }, []);
 };
 
-export const day3part2 = (contentsOfRucksacks: string): number => {
+export const day3part2 = (
+  contentsOfRucksacks: string,
+  verbal: boolean | undefined
+): number => {
   const rucksacks = contentsOfRucksacks.replace(/\r/g, '').split(`\n`);
+  if (verbal) console.log('rucksacks:');
+  if (verbal) console.log(rucksacks.map(translateRucksackToEmojiFruit));
   const groups = groupRucksacs(rucksacks);
-  return groups.reduce(
-    (acc, group) => acc + convertItemToPriority(findBadge(group)),
-    0
-  );
+  if (verbal) console.log('grouped rucksacks:');
+  if (verbal)
+    console.log(
+      groups.map((group) => group.map(translateRucksackToEmojiFruit))
+    );
+  return groups.reduce((acc, group) => {
+    if (verbal) console.log("Finding group's badge");
+    if (verbal) console.log(translateGroupToEmojiFruit(group));
+    const badge = findBadge(group);
+    if (verbal) console.log('Badge: ', translateItemToEmojiFruit(badge));
+    const priority = convertItemToPriority(badge);
+    if (verbal) console.log('Priority: ', priority);
+
+    return acc + priority;
+  }, 0);
 };
