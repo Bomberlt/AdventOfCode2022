@@ -12,4 +12,4 @@ console.log('app running');
 // console.log('Day2 part2 answer: ', day2part2(encryptedStrategyGuide));
 const day3input = fs.readFileSync('./inputs/day3input', 'utf-8');
 console.log('Day3 answer: ', day3(day3input));
-//console.log('Day2 part2 answer: ', day2part2(day3input));
+console.log('Day2 part2 answer: ', day2part2(day3input));

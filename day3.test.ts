@@ -1,4 +1,10 @@
-import day3, { containsInBoth, convertItemToPriority } from './day3';
+import day3, {
+  containsInBoth,
+  convertItemToPriority,
+  day3part2,
+  findBadge,
+  groupRucksacs,
+} from './day3';
 
 describe('day3', () => {
   describe('item containing in both rucksack compartments', () => {
@@ -62,6 +68,62 @@ describe('day3', () => {
       });
     });
   });
+  describe('find badge', () => {
+    describe(`group rucksacks contains the items:
+        vJrwpWtwJgWrhcsFMMfFFhFp
+        jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+        PmmdzqPrVvPwwTWBwg`, () => {
+      const input = [
+        'vJrwpWtwJgWrhcsFMMfFFhFp',
+        'jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL',
+        'PmmdzqPrVvPwwTWBwg',
+      ];
+      it('answer is lowercase r', () => {
+        const answer = findBadge(input);
+
+        expect(answer).toBe('r');
+      });
+    });
+    describe(`group rucksacks contains the items:
+        wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+        ttgJtRGJQctTZtZT
+        CrZsJsPPZsGzwwsLwLmpwMDw`, () => {
+      const input = [
+        'wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn',
+        'ttgJtRGJQctTZtZT',
+        'CrZsJsPPZsGzwwsLwLmpwMDw',
+      ];
+      it('answer is Z', () => {
+        const answer = findBadge(input);
+
+        expect(answer).toBe('Z');
+      });
+    });
+  });
+
+  describe('group rucksacks', () => {
+    describe(`list or rucksacks is
+      vJrwpWtwJgWrhcsFMMfFFhFp
+      jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+      PmmdzqPrVvPwwTWBwg
+      wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+      ttgJtRGJQctTZtZT
+      CrZsJsPPZsGzwwsLwLmpwMDw`, () => {
+      const rucksacks = [
+        'vJrwpWtwJgWrhcsFMMfFFhFp',
+        'jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL',
+        'PmmdzqPrVvPwwTWBwg',
+        'wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn',
+        'ttgJtRGJQctTZtZT',
+        'CrZsJsPPZsGzwwsLwLmpwMDw',
+      ];
+      it('should return two groups', () => {
+        const groups = groupRucksacs(rucksacks);
+
+        expect(groups.length).toBe(2);
+      });
+    });
+  });
 
   describe(`example contents from rucksacks:
 vJrwpWtwJgWrhcsFMMfFFhFp
@@ -81,6 +143,13 @@ CrZsJsPPZsGzwwsLwLmpwMDw`;
         const result = day3(exampleInput);
 
         expect(result).toBe(157);
+      });
+    });
+    describe('for day3 part2', () => {
+      it('should return 70', () => {
+        const result = day3part2(exampleInput);
+
+        expect(result).toBe(70);
       });
     });
   });
