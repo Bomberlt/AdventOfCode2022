@@ -3,7 +3,7 @@ import fs from 'fs';
 import day1, { day1part2 } from './day1';
 import day2, { day2part2 } from './day2';
 import day3, { day3part2 } from './day3';
-import day4 from './day4';
+import day4, { day4part2 } from './day4';
 
 console.log('app running');
 // console.log('Day1 answer: ', day1());
@@ -17,4 +17,4 @@ console.log('app running');
 
 const day4input = fs.readFileSync('./inputs/day4input', 'utf-8');
 console.log('Day4 answer: ', day4(day4input));
-// console.log('Day4 part2 answer: ', day4part2(day4input, false));
+console.log('Day4 part2 answer: ', day4part2(day4input));

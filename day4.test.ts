@@ -1,4 +1,4 @@
-import { day4, pairFullyOverlaps } from './day4';
+import { day4, pairFullyOverlaps, pairOverlaps } from './day4';
 describe('day4', () => {
   describe(`input is
     2-4,6-8
@@ -42,6 +42,38 @@ describe('day4', () => {
       const pair = '23-29,5-28';
       it('should return false', () => {
         expect(pairFullyOverlaps(pair)).toBe(false);
+      });
+    });
+  });
+  describe('Pair overlaps', () => {
+    describe('pair is 2-4,6-8', () => {
+      const pair = '2-4,6-8';
+      it('should return false', () => {
+        expect(pairOverlaps(pair)).toBe(false);
+      });
+    });
+    describe('pair is 6-6,4-6', () => {
+      const pair = '6-6,4-6';
+      it('should return true', () => {
+        expect(pairOverlaps(pair)).toBe(true);
+      });
+    });
+    describe('pair is 5-7,7-9', () => {
+      const pair = '5-7,7-9';
+      it('should return true', () => {
+        expect(pairOverlaps(pair)).toBe(true);
+      });
+    });
+    describe('pair is 6-6,4-6', () => {
+      const pair = '6-6,4-6';
+      it('should return true', () => {
+        expect(pairOverlaps(pair)).toBe(true);
+      });
+    });
+    describe('pair is 4-6,2-3', () => {
+      const pair = '4-6,2-3';
+      it('should return false', () => {
+        expect(pairOverlaps(pair)).toBe(false);
       });
     });
   });
