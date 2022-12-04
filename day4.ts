@@ -52,12 +52,9 @@ export const pairOverlaps = (pair: string): boolean => {
 
   if (pairFullyOverlaps(pair)) return true;
 
-  // First ends in second
   if (
-    firstElfAssignments[0] <= firstElfAssignments[1] &&
     firstElfAssignments[1] >= secondElfAssignments[0] &&
-    firstElfAssignments[0] <= secondElfAssignments[1] &&
-    secondElfAssignments[0] <= secondElfAssignments[1]
+    firstElfAssignments[0] <= secondElfAssignments[1]
   ) {
     return true;
   }
