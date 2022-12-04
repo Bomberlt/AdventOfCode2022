@@ -38,5 +38,11 @@ describe('day4', () => {
         expect(pairFullyOverlaps(pair)).toBe(true);
       });
     });
+    describe('pair is 23-29,5-28', () => {
+      const pair = '23-29,5-28';
+      it('should return false', () => {
+        expect(pairFullyOverlaps(pair)).toBe(false);
+      });
+    });
   });
 });
