@@ -1,13 +1,21 @@
 export const day5 = (input: string): string => {
-  const inputArray = input.replace(/\r/g, '').split(`\n`);
-  return 'CMZ';
+  const inputs = input.replace(/\r/g, '').split(`\n\n`);
+  const stacks = parseStartingStacks(input[0]);
+  const moves = parseMoves(input[1]);
+  const stacksAfterTransformation = applyMoves(stacks, moves);
+  return stacksAfterTransformation.reduce(
+    (message, stack) => message + stack.pop(),
+    ''
+  );
 };
 export const day5part2 = (input: string): string => {
   const inputArray = input.replace(/\r/g, '').split(`\n`);
   return 'CMZ';
 };
 
-export const parseStartingtacks = (stacksInput: string) => {
+export const parseStartingStacks = (
+  stacksInput: string
+): Array<Array<string>> => {
   const indexes = ' 1' + stacksInput.split('1')[1];
   const stacks = stacksInput
     .split('1')[0]
@@ -52,6 +60,36 @@ export const parseStartingtacks = (stacksInput: string) => {
     }
   });
   return [firstStack, secondStack, thirdStack];
+};
+
+export interface Move {
+  move: number;
+  from: number;
+  to: number;
+}
+export const parseMoves = (movesInput: string): Array<Move> => {
+  const movesArray = movesInput.replace(/\r/g, '').split(`\n`);
+  return movesArray.map((moveString) => ({
+    move: parseInt(moveString.split(' ')[1]),
+    from: parseInt(moveString.split(' ')[3]),
+    to: parseInt(moveString.split(' ')[5]),
+  }));
+};
+
+export const applyMoves = (
+  startingStack: Array<Array<string>>,
+  moves: Array<Move>
+) => {
+  const stack = [...startingStack];
+  moves.forEach((move) => {
+    let remainingMoves = move.move;
+    while (remainingMoves > 0) {
+      const taken = stack[move.from - 1].pop();
+      stack[move.to - 1].push(taken);
+      remainingMoves = remainingMoves - 1;
+    }
+  });
+  return stack;
 };
 
 export default day5;
