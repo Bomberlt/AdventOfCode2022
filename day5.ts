@@ -18,45 +18,29 @@ export const parseStartingStacks = (
 ): Array<Array<string>> => {
   const indexes = ' 1' + stacksInput.split('1')[1];
   const stacks = stacksInput
-    .split('1')[0]
     .replace(/\r/g, '')
+    .split('\n 1')[0]
     .split(`\n`)
     .reverse();
   const firstStack = [];
   const secondStack = [];
   const thirdStack = [];
   stacks.forEach((line) => {
-    const firstItemIndex = line.indexOf('[') + 1;
-    if (firstItemIndex === 1) {
-      firstStack.push(line.substring(firstItemIndex, firstItemIndex + 1));
-      const remainingLine = line.substring(firstItemIndex + 2);
+    const firstItem = line.substring(1, 2);
+    if (firstItem !== ' ') {
+      firstStack.push(firstItem);
+    }
 
-      const secondItemIndex = remainingLine.indexOf('[') + 1;
-      if (secondItemIndex === 2) {
-        secondStack.push(
-          remainingLine.substring(secondItemIndex, secondItemIndex + 1)
-        );
-        const remainingLine2 = remainingLine.substring(secondItemIndex + 2);
+    let remainingLine = line.substring(4);
+    const secondItem = remainingLine.substring(1, 2);
+    if (secondItem !== ' ') {
+      secondStack.push(secondItem);
+    }
 
-        const thirdItemIndex = remainingLine2.indexOf('[') + 1;
-        if (thirdItemIndex === 2) {
-          thirdStack.push(
-            remainingLine2.substring(thirdItemIndex, thirdItemIndex + 1)
-          );
-        }
-      }
-    } else {
-      if (firstItemIndex === 5) {
-        secondStack.push(line.substring(firstItemIndex, firstItemIndex + 1));
-        const remainingLine = line.substring(firstItemIndex + 2);
-
-        const secondItemIndex = remainingLine.indexOf('[') + 1;
-        if (secondItemIndex === 2) {
-          thirdStack.push(
-            remainingLine.substring(secondItemIndex, secondItemIndex + 1)
-          );
-        }
-      }
+    remainingLine = remainingLine.substring(4);
+    const thirdItem = remainingLine.substring(1, 2);
+    if (thirdItem !== ' ') {
+      thirdStack.push(thirdItem);
     }
   });
   return [firstStack, secondStack, thirdStack];

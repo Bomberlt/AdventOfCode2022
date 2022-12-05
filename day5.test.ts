@@ -13,7 +13,7 @@ move 1 from 1 to 2`, () => {
     const puzzleInput = `    [D]    
 [N] [C]    
 [Z] [M] [P]
-1   2   3 
+ 1   2   3 
 
 move 1 from 2 to 1
 move 3 from 1 to 3
@@ -33,7 +33,7 @@ move 1 from 1 to 2`;
       const puzzleInput = `    [D]    
 [N] [C]    
 [Z] [M] [P]
-1   2   3`;
+ 1   2   3`;
       const result = parseStartingStacks(puzzleInput);
       it('should return three arrays', () => {
         expect(result).toHaveLength(3);
@@ -85,7 +85,7 @@ move 1 from 1 to 2`;
       const startingStacks = `    [D]    
 [N] [C]    
 [Z] [M] [P]
-1   2   3`;
+ 1   2   3`;
       describe(`and moves is
 move 1 from 2 to 1
 move 3 from 1 to 3
