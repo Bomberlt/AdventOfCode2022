@@ -4,6 +4,7 @@ import day1, { day1part2 } from './day1';
 import day2, { day2part2 } from './day2';
 import day3, { day3part2 } from './day3';
 import day4, { day4part2 } from './day4';
+import day5, { day5part2 } from './day5';
 
 console.log('app running');
 // console.log('Day1 answer: ', day1());
@@ -15,6 +16,10 @@ console.log('app running');
 // console.log('Day3 answer: ', day3(day3input, false));
 // console.log('Day3 part2 answer: ', day3part2(day3input, false));
 
-const day4input = fs.readFileSync('./inputs/day4input', 'utf-8');
-console.log('Day4 answer: ', day4(day4input));
-console.log('Day4 part2 answer: ', day4part2(day4input));
+// const day4input = fs.readFileSync('./inputs/day4input', 'utf-8');
+// console.log('Day4 answer: ', day4(day4input));
+// console.log('Day4 part2 answer: ', day4part2(day4input));
+
+const day5input = fs.readFileSync('./inputs/day5input', 'utf-8');
+console.log('Day5 answer: ', day5(day5input));
+console.log('Day5 part2 answer: ', day5part2(day5input));
