@@ -29,7 +29,7 @@ move 1 from 1 to 2`;
   [D]    
   [N] [C]    
   [Z] [M] [P]
-   1   2   3`, () => {
+   1   2   3 `, () => {
       const puzzleInput = `    [D]    
 [N] [C]    
 [Z] [M] [P]

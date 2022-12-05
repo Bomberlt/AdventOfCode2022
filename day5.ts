@@ -16,34 +16,33 @@ export const day5part2 = (input: string): string => {
 export const parseStartingStacks = (
   stacksInput: string
 ): Array<Array<string>> => {
-  const indexes = ' 1' + stacksInput.split('1')[1];
+  const indexes = '1' + stacksInput.split('1')[1];
+  const stacksCount = parseInt(indexes.trimEnd().split('').pop());
   const stacks = stacksInput
     .replace(/\r/g, '')
     .split('\n 1')[0]
     .split(`\n`)
     .reverse();
-  const firstStack = [];
-  const secondStack = [];
-  const thirdStack = [];
+  const parsedStacks = [];
+  let arraySize = stacksCount;
+  while (arraySize--) parsedStacks.push([]);
+
   stacks.forEach((line) => {
-    const firstItem = line.substring(1, 2);
-    if (firstItem !== ' ') {
-      firstStack.push(firstItem);
-    }
+    let stackNumber = 0;
+    let remainingLine = line;
+    while (stackNumber < stacksCount) {
+      const firstItem = remainingLine.substring(1, 2);
+      if (firstItem !== ' ') {
+        parsedStacks[stackNumber].push(firstItem);
+      }
+      if (stackNumber < stacksCount - 1) {
+        remainingLine = remainingLine.substring(4);
+      }
 
-    let remainingLine = line.substring(4);
-    const secondItem = remainingLine.substring(1, 2);
-    if (secondItem !== ' ') {
-      secondStack.push(secondItem);
-    }
-
-    remainingLine = remainingLine.substring(4);
-    const thirdItem = remainingLine.substring(1, 2);
-    if (thirdItem !== ' ') {
-      thirdStack.push(thirdItem);
+      stackNumber = stackNumber + 1;
     }
   });
-  return [firstStack, secondStack, thirdStack];
+  return parsedStacks;
 };
 
 export interface Move {
