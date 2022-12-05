@@ -9,8 +9,14 @@ export const day5 = (input: string): string => {
   );
 };
 export const day5part2 = (input: string): string => {
-  const inputArray = input.replace(/\r/g, '').split(`\n`);
-  return 'CMZ';
+  const stacksAndMoves = input.replace(/\r/g, '').split(`\n\n`);
+  const stacks = parseStartingStacks(stacksAndMoves[0]);
+  const moves = parseMoves(stacksAndMoves[1]);
+  const stacksAfterTransformation = applyMoves9001(stacks, moves);
+  return stacksAfterTransformation.reduce(
+    (message, stack) => message + stack.pop(),
+    ''
+  );
 };
 
 export const parseStartingStacks = (
@@ -71,6 +77,23 @@ export const applyMoves = (
       stack[move.to - 1].push(taken);
       remainingMoves = remainingMoves - 1;
     }
+  });
+  return stack;
+};
+
+export const applyMoves9001 = (
+  startingStack: Array<Array<string>>,
+  moves: Array<Move>
+) => {
+  const stack = [...startingStack];
+  moves.forEach((move) => {
+    let remainingMoves = move.move;
+    const movingCrates = [];
+    while (remainingMoves > 0) {
+      movingCrates.push(stack[move.from - 1].pop());
+      remainingMoves = remainingMoves - 1;
+    }
+    stack[move.to - 1] = stack[move.to - 1].concat(movingCrates.reverse());
   });
   return stack;
 };

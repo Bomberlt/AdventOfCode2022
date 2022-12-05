@@ -1,4 +1,9 @@
-import day5, { applyMoves, parseMoves, parseStartingStacks } from './day5';
+import day5, {
+  applyMoves,
+  applyMoves9001,
+  parseMoves,
+  parseStartingStacks,
+} from './day5';
 describe('day5', () => {
   describe(`When puzzle input is
 [D]    
@@ -110,6 +115,44 @@ move 1 from 1 to 2`;
         });
         it('should return third array with P', () => {
           expect(result[2]).toStrictEqual(['P', 'D', 'N', 'Z']);
+        });
+      });
+    });
+  });
+  describe('applyMoves9001', () => {
+    describe(`When starting stacks is
+  [D]    
+  [N] [C]    
+  [Z] [M] [P]
+   1   2   3`, () => {
+      const startingStacks = `    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3`;
+      describe(`and moves is
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2`, () => {
+        const moves = `move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2`;
+        const result = applyMoves9001(
+          parseStartingStacks(startingStacks),
+          parseMoves(moves)
+        );
+        it('should return three arrays', () => {
+          expect(result).toHaveLength(3);
+        });
+        it('should return first array with M', () => {
+          expect(result[0]).toStrictEqual(['M']);
+        });
+        it('should return second array with C', () => {
+          expect(result[1]).toStrictEqual(['C']);
+        });
+        it('should return third array with P', () => {
+          expect(result[2]).toStrictEqual(['P', 'Z', 'N', 'D']);
         });
       });
     });
