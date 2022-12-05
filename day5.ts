@@ -1,7 +1,7 @@
 export const day5 = (input: string): string => {
-  const inputs = input.replace(/\r/g, '').split(`\n\n`);
-  const stacks = parseStartingStacks(input[0]);
-  const moves = parseMoves(input[1]);
+  const stacksAndMoves = input.replace(/\r/g, '').split(`\n\n`);
+  const stacks = parseStartingStacks(stacksAndMoves[0]);
+  const moves = parseMoves(stacksAndMoves[1]);
   const stacksAfterTransformation = applyMoves(stacks, moves);
   return stacksAfterTransformation.reduce(
     (message, stack) => message + stack.pop(),
