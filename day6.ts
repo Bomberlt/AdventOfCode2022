@@ -1,9 +1,16 @@
 export const day6 = (datastream: string): number => {
+  return getMarkerPos(datastream, 4);
+};
+export const day6part2 = (datastream: string): number => {
+  return getMarkerPos(datastream, 14);
+};
+
+const getMarkerPos = (datastream: string, markerSize: number): number => {
   let differentCharsCount = 0;
   let currentChars = '';
   let remainingStream = datastream;
   let i = 0;
-  while (remainingStream.length > 0 && differentCharsCount < 4) {
+  while (remainingStream.length > 0 && differentCharsCount < markerSize) {
     const currentChar = remainingStream[0];
     if (currentChars.includes(currentChar)) {
       const repeatedIndex = currentChars.indexOf(currentChar);
@@ -17,9 +24,6 @@ export const day6 = (datastream: string): number => {
     i = i + 1;
   }
   return i;
-};
-export const day6part2 = (datastream: string): number => {
-  return 7;
 };
 
 export default day6;
