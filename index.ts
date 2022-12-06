@@ -5,8 +5,11 @@ import day2, { day2part2 } from './day2';
 import day3, { day3part2 } from './day3';
 import day4, { day4part2 } from './day4';
 import day5, { day5part2 } from './day5';
+import day6, { day6part2 } from './day6';
 
 console.log('app running');
+const day = 6;
+const input = fs.readFileSync(`./inputs/day${day}input`, 'utf-8');
 // console.log('Day1 answer: ', day1());
 // console.log('Day1 part2 answer: ', day1part2());
 // const encryptedStrategyGuide = fs.readFileSync('./inputs/day2input', 'utf-8');
@@ -20,6 +23,8 @@ console.log('app running');
 // console.log('Day4 answer: ', day4(day4input));
 // console.log('Day4 part2 answer: ', day4part2(day4input));
 
-const day5input = fs.readFileSync('./inputs/day5input', 'utf-8');
-console.log('Day5 answer: ', day5(day5input));
-console.log('Day5 part2 answer: ', day5part2(day5input));
+// console.log('Day5 answer: ', day5(input));
+// console.log('Day5 part2 answer: ', day5part2(input));
+
+console.log('Day6 answer: ', day6(input));
+console.log('Day6 part2 answer: ', day6part2(input));
