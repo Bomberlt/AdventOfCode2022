@@ -1,4 +1,6 @@
 export const day7 = (filesystemSituationTerminalOutput: string): number => {
+  const folder = terminalInputToFilesystem(filesystemSituationTerminalOutput);
+  const directoriesSizes = calcDirectoriesSizes(folder);
   return 95437;
 };
 export const day7part2 = (
@@ -12,21 +14,38 @@ export interface Folder {
   files: Array<File>;
   name: string;
 }
+export interface FolderSize {
+  name: string;
+  size: number;
+}
 
 export interface File {
   name: string;
   size: number;
 }
 
-export const terminalInputToFilesystem = (
-  terminalOutput: string
-): Array<Folder> => {
+export const terminalInputToFilesystem = (terminalOutput: string): Folder => {
   const terminalLines = terminalOutput
     .replace(/\r/g, '')
     .split(`\n`)
     .map((line) => line.trimStart());
-  const folder = readOneFolder(terminalLines.slice(2), '/');
-  return [folder];
+  return readOneFolder(terminalLines.slice(2), '/');
+};
+
+interface FoldersInfo {
+  size: number;
+  innerFolderSizes: FolderSize;
+}
+
+export const calcDirectoriesSizes = (
+  parentFolder: Folder
+): Array<FolderSize> => {
+  const sizes = [];
+  parentFolder.folders.forEach((folder) => {
+    const filesSize = folder.files.reduce((sum, file) => sum + file.size, 0);
+    sizes.push({ name: folder.name, size: filesSize });
+  });
+  return sizes;
 };
 
 const readOneFolder = (
