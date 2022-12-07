@@ -32,21 +32,47 @@ export const terminalInputToFilesystem = (terminalOutput: string): Folder => {
   return readOneFolder(terminalLines.slice(2), '/');
 };
 
-interface FoldersInfo {
-  size: number;
-  innerFolderSizes: FolderSize;
-}
-
 export const calcDirectoriesSizes = (
   parentFolder: Folder
 ): Array<FolderSize> => {
   const sizes = [];
   parentFolder.folders.forEach((folder) => {
     const filesSize = folder.files.reduce((sum, file) => sum + file.size, 0);
-    sizes.push({ name: folder.name, size: filesSize });
+    let foldersSize = 0;
+    if (folder.folders.length > 0) {
+      const innerFoldersSizes = folder.folders
+        .map((innerFolder) => calcDirectoriesSizes(innerFolder))
+        .flat();
+      foldersSize = innerFoldersSizes.reduce(
+        (sum, innerFolderSize) => sum + innerFolderSize.size,
+        0
+      );
+      sizes.push(...innerFoldersSizes);
+    }
+    sizes.push({ name: folder.name, size: filesSize + foldersSize });
   });
+  const filesSize = parentFolder.files.reduce(
+    (sum, file) => sum + file.size,
+    0
+  );
+  const foldersSize = sizes.reduce(
+    (sum, innerFolderSize) => sum + innerFolderSize.size,
+    0
+  );
+  sizes.push({ name: parentFolder.name, size: filesSize + foldersSize });
   return sizes;
 };
+
+// const getFoldersInfo = (folders: Array<Folder>): FoldersInfo => {
+//   const sizes = [];
+//   folders.forEach((folder) => {
+//     const filesSize = folder.files.reduce((sum, file) => sum + file.size, 0);
+//     //const foldersInfo = getFoldersInfo(folder.folders);
+//     foldersInfo.push({})
+//   });
+//   folders
+//   return {size: };
+// };
 
 const readOneFolder = (
   lines: Array<string>,

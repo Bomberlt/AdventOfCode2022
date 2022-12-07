@@ -114,8 +114,9 @@ $ ls
 });
 
 describe('calcDirectoriesSizes', () => {
+  const file1 = { name: 'file1', size: 2 };
+  const file2 = { name: 'file1', size: 3 };
   describe('when one dir with one file', () => {
-    const file1 = { name: 'file1', size: 2 };
     const dir1 = { name: 'dir1', files: [file1], folders: [] };
     const dir = {
       name: '/',
@@ -128,6 +129,24 @@ describe('calcDirectoriesSizes', () => {
     });
     it('should contain that dir with size of that file size', () => {
       expect(result.find((fs) => fs.name === dir1.name).size).toBe(file1.size);
+    });
+  });
+  describe('when one dir with one file and one folder with another file', () => {
+    const dir2 = { name: 'dir2', files: [file2], folders: [] };
+    const dir1 = { name: 'dir1', files: [file1], folders: [dir2] };
+    const dir = {
+      name: '/',
+      files: [],
+      folders: [dir1],
+    };
+    const result = calcDirectoriesSizes(dir);
+    it('should contain that dir', () => {
+      expect(result.some((fs) => fs.name === dir1.name)).toBeTruthy();
+    });
+    it('should contain that dir with size of that file size', () => {
+      expect(result.find((fs) => fs.name === dir1.name).size).toBe(
+        file1.size + file2.size
+      );
     });
   });
 });
