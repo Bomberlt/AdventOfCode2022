@@ -6,9 +6,10 @@ import day3, { day3part2 } from './day3';
 import day4, { day4part2 } from './day4';
 import day5, { day5part2 } from './day5';
 import day6, { day6part2 } from './day6';
+import day7, { day7part2 } from './day7';
 
 console.log('app running');
-const day = 6;
+const day = 7;
 const input = fs.readFileSync(`./inputs/day${day}input`, 'utf-8');
 // console.log('Day1 answer: ', day1());
 // console.log('Day1 part2 answer: ', day1part2());
@@ -28,3 +29,6 @@ const input = fs.readFileSync(`./inputs/day${day}input`, 'utf-8');
 
 console.log('Day6 answer: ', day6(input));
 console.log('Day6 part2 answer: ', day6part2(input));
+
+console.log('Day7 answer: ', day7(input));
+console.log('Day7 part2 answer: ', day7part2(input));
