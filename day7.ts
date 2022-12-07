@@ -25,41 +25,49 @@ export const terminalInputToFilesystem = (
     .replace(/\r/g, '')
     .split(`\n`)
     .map((line) => line.trimStart());
-  let name = '';
-  let folders = [];
-  let files = [];
-  terminalLines.every((line) => {
-    if (line.startsWith('$')) {
-      // Command
-      if (line.startsWith('$ cd')) {
-        if (line.split(' ').pop() !== '/') {
-          // TODO: Go deeper
-          return false;
-        }
-        // Open folder
-        name = line.split(' ').pop();
-      } else if (line.startsWith('$ ls')) {
-        // List contents
+  const folder = readOneFolder(terminalLines.slice(2), '/');
+  return [folder];
+};
+
+const readOneFolder = (
+  lines: Array<string>,
+  currentFolderName: string
+): Folder => {
+  let folders: Array<Folder> = [];
+  let files: Array<File> = [];
+  let readingInsideFolders = false;
+  lines.every((line, index, array) => {
+    if (line === '$ cd ..' && !readingInsideFolders) {
+      return false;
+    }
+    if (readingInsideFolders) {
+      // Skips lines when reading inside folder
+      if (line === '$ cd ..') {
+        readingInsideFolders = false;
       }
     } else {
-      if (line.startsWith('dir')) {
-        const folderName = line.split(' ').pop();
-        folders.push({ name: folderName, folders: [], files: [] });
+      if (line.startsWith('$ cd')) {
+        // Open folder
+        const name = line.split(' ').pop();
+        const folder = readOneFolder(lines.slice(index + 2), name);
+        const existingFolder = folders.find((folder) => folder.name === name);
+        existingFolder.files = folder.files;
+        existingFolder.folders = folder.folders;
+        readingInsideFolders = true;
       } else {
-        const fileName = line.split(' ').pop();
-        const fileSize = line.split(' ')[0];
-        files.push({ name: fileName, size: fileSize });
+        if (line.startsWith('dir')) {
+          const folderName = line.split(' ').pop();
+          folders.push({ name: folderName, folders: [], files: [] });
+        } else {
+          const fileName = line.split(' ').pop();
+          const fileSize = parseInt(line.split(' ')[0]);
+          files.push({ name: fileName, size: fileSize });
+        }
       }
     }
     return true;
   });
-  return [
-    {
-      folders: folders,
-      files: files,
-      name: name,
-    },
-  ];
+  return { name: currentFolderName, folders, files };
 };
 
 export default day7;

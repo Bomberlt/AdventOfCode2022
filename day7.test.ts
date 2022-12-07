@@ -101,7 +101,7 @@ $ ls
 5626152 d.ext
 7214296 k`;
       const result = terminalInputToFilesystem(terminalOutput);
-      it('should return one folder', () => {
+      it('should return one folder1', () => {
         expect(result).toHaveLength(1);
       });
       it('should return folder name /', () => {
