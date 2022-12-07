@@ -7,16 +7,16 @@ export const day6part2 = (datastream: string): number => {
 
 const getMarkerPos = (datastream: string, markerSize: number): number => {
   let answer = 0;
-  datastream.split('').reduce((currentChars, char, currentIndex, arr) => {
-    if (currentChars.includes(char)) {
-      const repeatedIndex = currentChars.indexOf(char);
-      currentChars = currentChars.substring(repeatedIndex + 1);
+  datastream.split('').reduce((marker, char, currentIndex, arr) => {
+    if (marker.includes(char)) {
+      const repeatedIndex = marker.indexOf(char);
+      marker = marker.substring(repeatedIndex + 1);
     }
-    if (currentChars.length + 1 === markerSize) {
+    if (marker.length + 1 === markerSize) {
       answer = currentIndex + 1;
-      arr.splice(1);
+      arr.splice(1); //break;
     }
-    return currentChars + char;
+    return marker + char;
   }, '');
   return answer;
 };
