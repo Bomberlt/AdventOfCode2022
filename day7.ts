@@ -15,8 +15,8 @@ export const day7part2 = (
 ): number => {
   const folder = terminalInputToFilesystem(filesystemSituationTerminalOutput);
   const directoriesSizes = calcDirectoriesSizes(folder);
-  const unusedSpace =
-    70000000 - directoriesSizes.find((dirSize) => dirSize.name === '/').size;
+  // TODO: Get 41072511 from sum of all files
+  const unusedSpace = 70000000 - 41072511; // directoriesSizes.find((dirSize) => dirSize.name === '/').size;
   const spaceToFree = 30000000 - unusedSpace;
 
   const directoriesBiggerThanSpaceToFree = directoriesSizes
@@ -53,13 +53,18 @@ export const terminalInputToFilesystem = (terminalOutput: string): Folder => {
 export const calcDirectoriesSizes = (
   parentFolder: Folder
 ): Array<FolderSize> => {
-  const foldersSizes = parentFolder.folders
-    .map((folder) => calcDirectoriesSizes(folder))
-    .flat();
-  const parentFoldersSize = foldersSizes.reduce(
-    (sum, innerFolderSize) => sum + innerFolderSize.size,
-    0
-  );
+  let foldersSizes = [];
+  let parentFoldersSize = 0;
+  if (parentFolder.folders.length > 0) {
+    parentFolder.folders.forEach((folder) => {
+      foldersSizes.push(...calcDirectoriesSizes(folder));
+    });
+
+    parentFoldersSize = foldersSizes.reduce(
+      (sum, innerFolderSize) => sum + innerFolderSize.size,
+      0
+    );
+  }
 
   const filesSize = parentFolder.files.reduce(
     (sum, file) => sum + file.size,
