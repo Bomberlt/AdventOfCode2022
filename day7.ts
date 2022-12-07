@@ -1,7 +1,14 @@
 export const day7 = (filesystemSituationTerminalOutput: string): number => {
   const folder = terminalInputToFilesystem(filesystemSituationTerminalOutput);
   const directoriesSizes = calcDirectoriesSizes(folder);
-  return 95437;
+  const directoriesWithSizeOfAtMost100000 = directoriesSizes.filter(
+    (dir) => dir.size <= 100000
+  );
+
+  return directoriesWithSizeOfAtMost100000.reduce(
+    (sum, dir) => sum + dir.size,
+    0
+  );
 };
 export const day7part2 = (
   filesystemSituationTerminalOutput: string
@@ -35,35 +42,36 @@ export const terminalInputToFilesystem = (terminalOutput: string): Folder => {
 export const calcDirectoriesSizes = (
   parentFolder: Folder
 ): Array<FolderSize> => {
-  const foldersSizes = parentFolder.folders
-    .map((folder) => calcDirectoriesSizes(folder))
-    .flat();
+  // const foldersSizes = parentFolder.folders
+  //   .map((folder) => calcDirectoriesSizes(folder))
+  //   .flat();
+  let foldersSizes = [];
+  let parentFoldersSize = 0;
+  if (parentFolder.folders.length > 0) {
+    parentFolder.folders.forEach((folder) => {
+      foldersSizes.push(...calcDirectoriesSizes(folder));
+    });
 
-  const parentFoldersSize = foldersSizes.reduce(
-    (sum, innerFolderSize) => sum + innerFolderSize.size,
-    0
-  );
+    parentFoldersSize = foldersSizes.reduce(
+      (sum, innerFolderSize) => sum + innerFolderSize.size,
+      0
+    );
+  }
   const filesSize = parentFolder.files.reduce(
     (sum, file) => sum + file.size,
     0
   );
-  foldersSizes.push({
+  const parentFolderSize = {
     name: parentFolder.name,
     size: filesSize + parentFoldersSize,
+  };
+  const updatedNames = foldersSizes.map((folderSize) => {
+    const newName = parentFolder.name + '/' + folderSize.name;
+    return { size: folderSize.size, name: newName };
   });
-  return foldersSizes;
+  updatedNames.push(parentFolderSize);
+  return updatedNames;
 };
-
-// const getFoldersInfo = (folders: Array<Folder>): FoldersInfo => {
-//   const sizes = [];
-//   folders.forEach((folder) => {
-//     const filesSize = folder.files.reduce((sum, file) => sum + file.size, 0);
-//     //const foldersInfo = getFoldersInfo(folder.folders);
-//     foldersInfo.push({})
-//   });
-//   folders
-//   return {size: };
-// };
 
 const readOneFolder = (
   lines: Array<string>,
@@ -71,15 +79,19 @@ const readOneFolder = (
 ): Folder => {
   let folders: Array<Folder> = [];
   let files: Array<File> = [];
-  let readingInsideFolders = false;
+  let depth = 0;
   lines.every((line, index, array) => {
-    if (line === '$ cd ..' && !readingInsideFolders) {
+    if (line === '$ cd ..' && depth === 0) {
       return false;
     }
-    if (readingInsideFolders) {
+    if (depth > 0) {
       // Skips lines when reading inside folder
       if (line === '$ cd ..') {
-        readingInsideFolders = false;
+        depth = depth - 1;
+      } else {
+        if (line.startsWith('$ cd')) {
+          depth = depth + 1;
+        }
       }
     } else {
       if (line.startsWith('$ cd')) {
@@ -89,11 +101,15 @@ const readOneFolder = (
         const existingFolder = folders.find((folder) => folder.name === name);
         existingFolder.files = folder.files;
         existingFolder.folders = folder.folders;
-        readingInsideFolders = true;
+        depth = depth + 1;
       } else {
         if (line.startsWith('dir')) {
           const folderName = line.split(' ').pop();
-          folders.push({ name: folderName, folders: [], files: [] });
+          folders.push({
+            name: folderName,
+            folders: [],
+            files: [{ name: 'TEMP', size: 0 }],
+          });
         } else {
           const fileName = line.split(' ').pop();
           const fileSize = parseInt(line.split(' ')[0]);

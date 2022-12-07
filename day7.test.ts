@@ -1,30 +1,9 @@
 import day7, { calcDirectoriesSizes, terminalInputToFilesystem } from './day7';
+import fs from 'fs';
 
 describe('day7', () => {
   describe('terminal output is', () => {
-    describe(`$ cd /
-    $ ls
-    dir a
-    14848514 b.txt
-    8504156 c.dat
-    dir d
-    $ cd a
-    $ ls
-    dir e
-    29116 f
-    2557 g
-    62596 h.lst
-    $ cd e
-    $ lslka
-    584 i
-    $ cd ..
-    $ cd ..
-    $ cd d
-    $ ls
-    4060174 j
-    8033020 d.log
-    5626152 d.ext
-    7214296 k`, () => {
+    describe('example', () => {
       const terminalOutput = `$ cd /
 $ ls
 dir a
@@ -50,6 +29,12 @@ $ ls
 7214296 k`;
       it('should return 95437', () => {
         expect(day7(terminalOutput)).toBe(95437);
+      });
+    });
+    describe('puzzle input', () => {
+      const terminalOutput = fs.readFileSync(`./inputs/day7input`, 'utf-8');
+      it('should return 95437', () => {
+        expect(day7(terminalOutput)).toBeGreaterThan(0);
       });
     });
   });
@@ -125,10 +110,12 @@ describe('calcDirectoriesSizes', () => {
     };
     const result = calcDirectoriesSizes(dir);
     it('should contain that dir', () => {
-      expect(result.some((fs) => fs.name === dir1.name)).toBeTruthy();
+      expect(result.some((fs) => fs.name === '//' + dir1.name)).toBeTruthy();
     });
     it('should contain that dir with size of that file size', () => {
-      expect(result.find((fs) => fs.name === dir1.name).size).toBe(file1.size);
+      expect(result.find((fs) => fs.name === '//' + dir1.name).size).toBe(
+        file1.size
+      );
     });
   });
   describe('when one dir with one file and one folder with another file', () => {
@@ -141,10 +128,10 @@ describe('calcDirectoriesSizes', () => {
     };
     const result = calcDirectoriesSizes(dir);
     it('should contain that dir', () => {
-      expect(result.some((fs) => fs.name === dir1.name)).toBeTruthy();
+      expect(result.some((fs) => fs.name === '//' + dir1.name)).toBeTruthy();
     });
     it('should contain that dir with size of that file size', () => {
-      expect(result.find((fs) => fs.name === dir1.name).size).toBe(
+      expect(result.find((fs) => fs.name === '//' + dir1.name).size).toBe(
         file1.size + file2.size
       );
     });

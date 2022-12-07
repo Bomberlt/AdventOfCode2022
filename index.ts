@@ -27,8 +27,8 @@ const input = fs.readFileSync(`./inputs/day${day}input`, 'utf-8');
 // console.log('Day5 answer: ', day5(input));
 // console.log('Day5 part2 answer: ', day5part2(input));
 
-console.log('Day6 answer: ', day6(input));
-console.log('Day6 part2 answer: ', day6part2(input));
+// console.log('Day6 answer: ', day6(input));
+// console.log('Day6 part2 answer: ', day6part2(input));
 
 console.log('Day7 answer: ', day7(input));
 console.log('Day7 part2 answer: ', day7part2(input));
