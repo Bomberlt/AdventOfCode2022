@@ -1,4 +1,8 @@
-import day7, { calcDirectoriesSizes, terminalInputToFilesystem } from './day7';
+import day7, {
+  calcDirectoriesSizes,
+  day7part2,
+  terminalInputToFilesystem,
+} from './day7';
 import fs from 'fs';
 
 describe('day7', () => {
@@ -35,6 +39,44 @@ $ ls
       const terminalOutput = fs.readFileSync(`./inputs/day7input`, 'utf-8');
       it('should return 1989474', () => {
         expect(day7(terminalOutput)).toBe(1989474);
+      });
+    });
+  });
+});
+describe('day7part2', () => {
+  describe('terminal output is', () => {
+    describe('example', () => {
+      const terminalOutput = `$ cd /
+$ ls
+dir a
+14848514 b.txt
+8504156 c.dat
+dir d
+$ cd a
+$ ls
+dir e
+29116 f
+2557 g
+62596 h.lst
+$ cd e
+$ ls
+584 i
+$ cd ..
+$ cd ..
+$ cd d
+$ ls
+4060174 j
+8033020 d.log
+5626152 d.ext
+7214296 k`;
+      it('should return 24933642', () => {
+        expect(day7part2(terminalOutput)).toBe(24933642);
+      });
+    });
+    describe('puzzle input', () => {
+      const terminalOutput = fs.readFileSync(`./inputs/day7input`, 'utf-8');
+      it('should return <962573787', () => {
+        expect(day7part2(terminalOutput)).toBeLessThan(962573787);
       });
     });
   });

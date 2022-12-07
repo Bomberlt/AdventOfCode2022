@@ -13,7 +13,18 @@ export const day7 = (filesystemSituationTerminalOutput: string): number => {
 export const day7part2 = (
   filesystemSituationTerminalOutput: string
 ): number => {
-  return 95437;
+  const folder = terminalInputToFilesystem(filesystemSituationTerminalOutput);
+  const directoriesSizes = calcDirectoriesSizes(folder);
+  const unusedSpace =
+    70000000 - directoriesSizes.find((dirSize) => dirSize.name === '/').size;
+  const spaceToFree = 30000000 - unusedSpace;
+
+  const directoriesBiggerThanSpaceToFree = directoriesSizes
+    .filter((dirSize) => dirSize.size > spaceToFree)
+    .sort((dirA, dirB) => dirA.size - dirB.size);
+
+  const smallestDirToFree = directoriesBiggerThanSpaceToFree[0];
+  return smallestDirToFree.size;
 };
 
 export interface Folder {
