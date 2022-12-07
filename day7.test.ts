@@ -33,8 +33,8 @@ $ ls
     });
     describe('puzzle input', () => {
       const terminalOutput = fs.readFileSync(`./inputs/day7input`, 'utf-8');
-      it('should return 95437', () => {
-        expect(day7(terminalOutput)).toBeGreaterThan(0);
+      it('should return 1989474', () => {
+        expect(day7(terminalOutput)).toBe(1989474);
       });
     });
   });

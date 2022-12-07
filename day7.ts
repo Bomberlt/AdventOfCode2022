@@ -42,21 +42,14 @@ export const terminalInputToFilesystem = (terminalOutput: string): Folder => {
 export const calcDirectoriesSizes = (
   parentFolder: Folder
 ): Array<FolderSize> => {
-  // const foldersSizes = parentFolder.folders
-  //   .map((folder) => calcDirectoriesSizes(folder))
-  //   .flat();
-  let foldersSizes = [];
-  let parentFoldersSize = 0;
-  if (parentFolder.folders.length > 0) {
-    parentFolder.folders.forEach((folder) => {
-      foldersSizes.push(...calcDirectoriesSizes(folder));
-    });
+  const foldersSizes = parentFolder.folders
+    .map((folder) => calcDirectoriesSizes(folder))
+    .flat();
+  const parentFoldersSize = foldersSizes.reduce(
+    (sum, innerFolderSize) => sum + innerFolderSize.size,
+    0
+  );
 
-    parentFoldersSize = foldersSizes.reduce(
-      (sum, innerFolderSize) => sum + innerFolderSize.size,
-      0
-    );
-  }
   const filesSize = parentFolder.files.reduce(
     (sum, file) => sum + file.size,
     0
@@ -123,4 +116,3 @@ const readOneFolder = (
 };
 
 export default day7;
-``;
