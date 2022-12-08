@@ -1,9 +1,5 @@
 export const day8 = (mapOfTreesString: string): number => {
-  const mapOfTrees = mapOfTreesString.replace(/\r/g, '').split(`\n`);
-  const mapMatrix = mapOfTrees.map((line) =>
-    line.split('').map((num) => parseInt(num))
-  );
-
+  const mapMatrix = readTreesToMatrix(mapOfTreesString);
   const colSize = mapMatrix.length;
   const rowSize = mapMatrix[0].length;
 
@@ -19,22 +15,18 @@ export const day8 = (mapOfTreesString: string): number => {
         return true;
       }
 
-      // look up
-      const visibleFromTop = mapMatrix
-        .slice(0, rowIndex)
-        .every((r) => r[colIndex] < currentTree);
-      // look down
-      const visibleFromBottom = mapMatrix
-        .slice(rowIndex + 1)
-        .every((r) => r[colIndex] < currentTree);
-      // look left
-      const visibleFromLeft = row
-        .slice(0, colIndex)
-        .every((tree) => tree < currentTree);
-      // look right
-      const visibleFromRight = row
-        .slice(colIndex + 1)
-        .every((tree) => tree < currentTree);
+      const visibleFromTop = lookUp(mapMatrix, rowIndex, colIndex).every(
+        (tree) => tree < currentTree
+      );
+      const visibleFromBottom = lookDown(mapMatrix, rowIndex, colIndex).every(
+        (tree) => tree < currentTree
+      );
+      const visibleFromLeft = lookLeft(row, colIndex).every(
+        (tree) => tree < currentTree
+      );
+      const visibleFromRight = lookRight(row, colIndex).every(
+        (tree) => tree < currentTree
+      );
       return (
         visibleFromTop ||
         visibleFromBottom ||
@@ -52,7 +44,32 @@ export const day8 = (mapOfTreesString: string): number => {
 };
 
 export const day8part2 = (mapOfTrees: string): number => {
+  const mapMatrix = readTreesToMatrix(mapOfTrees);
+  const colSize = mapMatrix.length;
+  const rowSize = mapMatrix[0].length;
   return 21;
 };
+
+const readTreesToMatrix = (mapOfTreesString: string): Array<Array<number>> => {
+  const mapOfTrees = mapOfTreesString.replace(/\r/g, '').split(`\n`);
+  return mapOfTrees.map((line) => line.split('').map((num) => parseInt(num)));
+};
+
+const lookUp = (
+  map: Array<Array<number>>,
+  rowIndex: number,
+  colIndex: number
+) => map.slice(0, rowIndex).map((r) => r[colIndex]);
+
+const lookDown = (
+  map: Array<Array<number>>,
+  rowIndex: number,
+  colIndex: number
+) => map.slice(0, rowIndex).map((r) => r[colIndex]);
+
+const lookLeft = (row: Array<number>, colIndex: number): Array<number> =>
+  row.slice(0, colIndex);
+const lookRight = (row: Array<number>, colIndex: number): Array<number> =>
+  row.slice(colIndex + 1);
 
 export default day8;
