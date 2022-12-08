@@ -10,7 +10,7 @@ import day7, { day7part2 } from './day7';
 import day8, { day8part2 } from './day8';
 
 console.log('app running');
-const day = 7;
+const day = 8;
 const input = fs.readFileSync(`./inputs/day${day}input`, 'utf-8');
 // console.log('Day1 answer: ', day1());
 // console.log('Day1 part2 answer: ', day1part2());
