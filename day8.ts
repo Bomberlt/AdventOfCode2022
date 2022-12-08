@@ -47,7 +47,62 @@ export const day8part2 = (mapOfTrees: string): number => {
   const mapMatrix = readTreesToMatrix(mapOfTrees);
   const colSize = mapMatrix.length;
   const rowSize = mapMatrix[0].length;
-  return 21;
+  const scenicScores = mapMatrix.map((row, rowIndex) =>
+    row.map((currentTree, colIndex) => {
+      // check if edge
+      if (
+        rowIndex === 0 ||
+        colIndex === 0 ||
+        rowIndex === colSize - 1 ||
+        colIndex === rowSize - 1
+      ) {
+        return 0;
+      }
+
+      const scoreTop =
+        lookUp(mapMatrix, rowIndex, colIndex)
+          .reverse()
+          .reduce(
+            (prev, currentValue, index) =>
+              prev === undefined && currentValue >= currentTree
+                ? index
+                : undefined,
+            undefined
+          ) || rowIndex;
+      const scoreBottom =
+        lookDown(mapMatrix, rowIndex, colIndex).reduce(
+          (prev, currentValue, index) =>
+            prev === undefined && currentValue >= currentTree
+              ? index
+              : undefined,
+          undefined
+        ) || colSize - rowIndex;
+      const scoreLeft =
+        lookLeft(row, colIndex)
+          .reverse()
+          .reduce(
+            (prev, currentValue, index) =>
+              prev === undefined && currentValue >= currentTree
+                ? index
+                : undefined,
+            undefined
+          ) || colIndex;
+      const scoreRight =
+        lookRight(row, colIndex).reduce(
+          (prev, currentValue, index) =>
+            prev === undefined && currentValue >= currentTree
+              ? index
+              : undefined,
+          undefined
+        ) || rowSize - colIndex;
+      return scoreTop * scoreBottom * scoreLeft * scoreRight;
+    })
+  );
+  const biggestScenicScore = scenicScores
+    .map((row) => row.sort().reverse()[0])
+    .sort()
+    .reverse()[0];
+  return biggestScenicScore;
 };
 
 const readTreesToMatrix = (mapOfTreesString: string): Array<Array<number>> => {
