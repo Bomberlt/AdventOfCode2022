@@ -32,8 +32,12 @@ export const day9 = (seriesOfMotions: string): number => {
     //console.log(move);
     printState(state);
   });
-  // count
-  return 13;
+  const visitedCount = state.reduce(
+    (sum, row) =>
+      sum + row.reduce((sum2, cell) => sum2 + (cell.visited ? 1 : 0), 0),
+    0
+  );
+  return visitedCount;
 };
 
 export const day9part2 = (seriesOfMotions: string): number => {
@@ -198,25 +202,35 @@ const directionalMove = (state, tailsRow, tailsCell, headRow, headCell) => {
   state[tailsRow][tailsCell].tails = false;
   // Do directional move
   if (headRow === tailsRow) {
+    const distanceMoved = Math.abs(headCell - tailsCell);
     if (headCell < tailsCell) {
       //left
+      for (let i = 0; i < distanceMoved; i++) {
+        state[tailsRow][tailsCell - i].visited = true;
+      }
       tailsCell = headCell + 1;
-      // TODO: mark visited
     } else {
       //right
+      for (let i = 0; i < distanceMoved; i++) {
+        state[tailsRow][tailsCell + i].visited = true;
+      }
       tailsCell = headCell - 1;
-      // TODO: mark visited
     }
   }
   if (headCell === tailsCell) {
+    const distanceMoved = Math.abs(headRow - tailsRow);
     if (headRow < tailsRow) {
       //up
+      for (let i = 0; i < distanceMoved; i++) {
+        state[tailsRow - i][tailsCell].visited = true;
+      }
       tailsRow = headRow + 1;
-      // TODO: mark visited
     } else {
       //down
+      for (let i = 0; i < distanceMoved; i++) {
+        state[tailsRow + i][tailsCell].visited = true;
+      }
       tailsRow = headRow - 1;
-      // TODO: mark visited
     }
   }
   state[tailsRow][tailsCell].tails = true;
@@ -229,7 +243,9 @@ export const createInitialPositionState = () => {
 const printState = (state: Array<Array<PositionState>>) => {
   console.log(
     state.map((row) =>
-      row.map((cell) => (cell.head ? 'H' : cell.tails ? 'T' : '.'))
+      row.map((cell) =>
+        cell.head ? 'H' : cell.tails ? 'T' : cell.visited ? '#' : '.'
+      )
     )
   );
 };
