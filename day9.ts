@@ -16,13 +16,21 @@ interface Move {
   steps: number;
 }
 
+interface Position {
+  row: number;
+  cell: number;
+}
+
 export const day9 = (seriesOfMotions: string): number => {
   const state = createInitialState();
   const moves = parseMoves(seriesOfMotions);
   // apply moves
   moves.forEach((move) => {
     moveHead(state, move);
-    //moveTail(state);
+    printState(state);
+    moveTails(state);
+    //console.log(move);
+    printState(state);
   });
   // count
   return 13;
@@ -106,7 +114,7 @@ export const moveHead = (state: Array<Array<PositionState>>, move: Move) => {
   state[finalRow][finalCell].head = true;
 };
 
-const moveTail = (state: Array<Array<PositionState>>) => {
+export const moveTails = (state: Array<Array<PositionState>>) => {
   let headRow;
   let headCell;
   let initialTRow;
@@ -125,8 +133,8 @@ const moveTail = (state: Array<Array<PositionState>>) => {
   );
 
   if (
-    Math.abs(headRow - initialTRow) < 2 &&
-    Math.abs(headCell - initialTCell) < 2
+    Math.abs(headRow - initialTRow) <= 1 &&
+    Math.abs(headCell - initialTCell) <= 1
   ) {
     return;
   }
@@ -135,40 +143,94 @@ const moveTail = (state: Array<Array<PositionState>>) => {
   let tailsCell = initialTCell;
 
   if (headRow !== tailsRow && headCell !== tailsCell) {
-    // Do diagonal move
-    state[tailsCell][tailsRow].visited = true;
-    state[tailsCell][tailsRow].tails = false;
-
-    // upleft
-    if (headRow < tailsRow && headCell < tailsCell) {
-      tailsRow = tailsRow - 1;
-      tailsCell = tailsCell - 1;
-    }
-    // upright
-    if (headRow < tailsRow && headCell > tailsCell) {
-      tailsRow = tailsRow - 1;
-      tailsCell = tailsCell + 1;
-    }
-    // downright
-    if (headRow > tailsRow && headCell > tailsCell) {
-      tailsRow = tailsRow + 1;
-      tailsCell = tailsCell + 1;
-    }
-    // downleft
-    if (headRow > tailsRow && headCell < tailsCell) {
-      tailsRow = tailsRow + 1;
-      tailsCell = tailsCell - 1;
-    }
-    state[tailsCell][tailsRow].tails = true;
+    const modifiedTailsPos = applyDiagonalMove(
+      state,
+      tailsRow,
+      tailsCell,
+      headRow,
+      headCell
+    );
+    tailsRow = modifiedTailsPos.row;
+    tailsCell = modifiedTailsPos.cell;
   }
-  // Do directional moves
+  if (
+    Math.abs(headRow - initialTRow) <= 1 &&
+    Math.abs(headCell - initialTCell) <= 1
+  ) {
+    return;
+  }
 
-  //state[headRow][headCell].tails = false;
+  state[tailsRow][tailsCell].tails = false;
+  // Do directional move
+  if (headRow === tailsRow) {
+    if (headCell < tailsCell) {
+      //left
+      tailsCell = headCell + 1;
+      // TODO: mark visited
+    } else {
+      //right
+      tailsCell = headCell - 1;
+      // TODO: mark visited
+    }
+  }
+  if (headCell === tailsCell) {
+    if (headRow < tailsRow) {
+      //up
+      tailsRow = headRow + 1;
+      // TODO: mark visited
+    } else {
+      //down
+      tailsRow = headRow - 1;
+      // TODO: mark visited
+    }
+  }
   state[tailsRow][tailsCell].tails = true;
+};
+
+const applyDiagonalMove = (
+  state,
+  tailsRow,
+  tailsCell,
+  headRow,
+  headCell
+): Position => {
+  state[tailsRow][tailsCell].visited = true;
+  state[tailsRow][tailsCell].tails = false;
+
+  // upleft
+  if (headRow < tailsRow && headCell < tailsCell) {
+    tailsRow = tailsRow - 1;
+    tailsCell = tailsCell - 1;
+  }
+  // upright
+  if (headRow < tailsRow && headCell > tailsCell) {
+    tailsRow = tailsRow - 1;
+    tailsCell = tailsCell + 1;
+  }
+  // downright
+  if (headRow > tailsRow && headCell > tailsCell) {
+    tailsRow = tailsRow + 1;
+    tailsCell = tailsCell + 1;
+  }
+  // downleft
+  if (headRow > tailsRow && headCell < tailsCell) {
+    tailsRow = tailsRow + 1;
+    tailsCell = tailsCell - 1;
+  }
+  state[tailsRow][tailsCell].tails = true;
+  return { row: tailsRow, cell: tailsCell };
 };
 
 export const createInitialPositionState = () => {
   return { start: false, head: false, tails: false, visited: false };
+};
+
+const printState = (state: Array<Array<PositionState>>) => {
+  console.log(
+    state.map((row) =>
+      row.map((cell) => (cell.head ? 'H' : cell.tails ? 'T' : '.'))
+    )
+  );
 };
 
 export default day9;

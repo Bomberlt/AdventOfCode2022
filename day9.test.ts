@@ -1,4 +1,9 @@
-import day9, { createInitialState, moveHead, parseMoves } from './day9';
+import day9, {
+  createInitialState,
+  moveHead,
+  moveTails,
+  parseMoves,
+} from './day9';
 
 describe('day 9', () => {
   describe('Given input moves', () => {
@@ -28,6 +33,15 @@ R 2`;
           moveHead(state, move);
         });
         expect(state[2][2].head).toBeTruthy();
+      });
+      it('tails should be at 3,2', () => {
+        const state = createInitialState();
+        const moves = parseMoves(inputMoves);
+        moves.forEach((move) => {
+          moveHead(state, move);
+          moveTails(state);
+        });
+        expect(state[2][1].tails).toBeTruthy();
       });
     });
   });
