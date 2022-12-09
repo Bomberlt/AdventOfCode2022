@@ -117,8 +117,8 @@ export const moveHead = (state: Array<Array<PositionState>>, move: Move) => {
 export const moveTails = (state: Array<Array<PositionState>>) => {
   let headRow;
   let headCell;
-  let initialTRow;
-  let initialTCell;
+  let tailsRow;
+  let tailsCell;
   state.forEach((row, rowIndex) =>
     row.forEach((cell, cellIndex) => {
       if (cell.head) {
@@ -126,24 +126,21 @@ export const moveTails = (state: Array<Array<PositionState>>) => {
         headCell = cellIndex;
       }
       if (cell.tails) {
-        initialTRow = rowIndex;
-        initialTCell = cellIndex;
+        tailsRow = rowIndex;
+        tailsCell = cellIndex;
       }
     })
   );
 
   if (
-    Math.abs(headRow - initialTRow) <= 1 &&
-    Math.abs(headCell - initialTCell) <= 1
+    Math.abs(headRow - tailsRow) <= 1 &&
+    Math.abs(headCell - tailsCell) <= 1
   ) {
     return;
   }
 
-  let tailsRow = initialTRow;
-  let tailsCell = initialTCell;
-
   if (headRow !== tailsRow && headCell !== tailsCell) {
-    const modifiedTailsPos = applyDiagonalMove(
+    const modifiedTailsPos = diagonalMove(
       state,
       tailsRow,
       tailsCell,
@@ -154,40 +151,16 @@ export const moveTails = (state: Array<Array<PositionState>>) => {
     tailsCell = modifiedTailsPos.cell;
   }
   if (
-    Math.abs(headRow - initialTRow) <= 1 &&
-    Math.abs(headCell - initialTCell) <= 1
+    Math.abs(headRow - tailsRow) <= 1 &&
+    Math.abs(headCell - tailsCell) <= 1
   ) {
     return;
   }
 
-  state[tailsRow][tailsCell].tails = false;
-  // Do directional move
-  if (headRow === tailsRow) {
-    if (headCell < tailsCell) {
-      //left
-      tailsCell = headCell + 1;
-      // TODO: mark visited
-    } else {
-      //right
-      tailsCell = headCell - 1;
-      // TODO: mark visited
-    }
-  }
-  if (headCell === tailsCell) {
-    if (headRow < tailsRow) {
-      //up
-      tailsRow = headRow + 1;
-      // TODO: mark visited
-    } else {
-      //down
-      tailsRow = headRow - 1;
-      // TODO: mark visited
-    }
-  }
-  state[tailsRow][tailsCell].tails = true;
+  directionalMove(state, tailsRow, tailsCell, headRow, headCell);
 };
 
-const applyDiagonalMove = (
+const diagonalMove = (
   state,
   tailsRow,
   tailsCell,
@@ -219,6 +192,34 @@ const applyDiagonalMove = (
   }
   state[tailsRow][tailsCell].tails = true;
   return { row: tailsRow, cell: tailsCell };
+};
+
+const directionalMove = (state, tailsRow, tailsCell, headRow, headCell) => {
+  state[tailsRow][tailsCell].tails = false;
+  // Do directional move
+  if (headRow === tailsRow) {
+    if (headCell < tailsCell) {
+      //left
+      tailsCell = headCell + 1;
+      // TODO: mark visited
+    } else {
+      //right
+      tailsCell = headCell - 1;
+      // TODO: mark visited
+    }
+  }
+  if (headCell === tailsCell) {
+    if (headRow < tailsRow) {
+      //up
+      tailsRow = headRow + 1;
+      // TODO: mark visited
+    } else {
+      //down
+      tailsRow = headRow - 1;
+      // TODO: mark visited
+    }
+  }
+  state[tailsRow][tailsCell].tails = true;
 };
 
 export const createInitialPositionState = () => {
