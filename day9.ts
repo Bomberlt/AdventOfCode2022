@@ -6,10 +6,10 @@ interface PositionState {
 }
 
 enum Direction {
-  Left,
-  Right,
-  Up,
-  Down,
+  Left = 'left',
+  Right = 'right',
+  Up = 'up',
+  Down = 'down',
 }
 interface Move {
   direction: Direction;
@@ -25,12 +25,12 @@ export const day9 = (seriesOfMotions: string): number => {
   const state = createInitialState();
   const moves = parseMoves(seriesOfMotions);
   // apply moves
-  moves.forEach((move) => {
+  moves.forEach((move, i) => {
+    if (i > 1600) console.log(move, i);
     moveHead(state, move);
-    printState(state);
+    //printState(state);
     moveTails(state);
-    //console.log(move);
-    printState(state);
+    if (i > 1600) printState(state);
   });
   const visitedCount = state.reduce(
     (sum, row) =>
@@ -45,8 +45,10 @@ export const day9part2 = (seriesOfMotions: string): number => {
 };
 
 export const createInitialState = (): Array<Array<PositionState>> => {
-  const spaceHeight = 5;
-  const spaceWidth = 6;
+  // const spaceHeight = 5;
+  // const spaceWidth = 6;
+  const spaceHeight = 250;
+  const spaceWidth = 450;
   const initialState = new Array(spaceHeight);
   for (let i = 0; i < initialState.length; i++) {
     const row = new Array(spaceWidth);
@@ -55,10 +57,14 @@ export const createInitialState = (): Array<Array<PositionState>> => {
     }
     initialState[i] = row;
   }
-  initialState[4][0].start = true;
-  initialState[4][0].head = true;
-  initialState[4][0].tails = true;
-  initialState[4][0].visited = true;
+  // const startRow = spaceHeight - 1;
+  // const startCell = 0;
+  const startRow = 50;
+  const startCell = 300;
+  initialState[startRow][startCell].start = true;
+  initialState[startRow][startCell].head = true;
+  initialState[startRow][startCell].tails = true;
+  initialState[startRow][startCell].visited = true;
   return initialState;
 };
 
@@ -241,13 +247,23 @@ export const createInitialPositionState = () => {
 };
 
 const printState = (state: Array<Array<PositionState>>) => {
-  console.log(
-    state.map((row) =>
-      row.map((cell) =>
-        cell.head ? 'H' : cell.tails ? 'T' : cell.visited ? '#' : '.'
-      )
+  const markedMatrix = state.map((row) =>
+    row.map((cell, i) =>
+      i > 100 && i < 350
+        ? ''
+        : cell.head
+        ? 'H'
+        : cell.tails
+        ? 'T'
+        : cell.visited
+        ? '#'
+        : '.'
     )
   );
+  console.log('state:');
+  markedMatrix.forEach((row) => {
+    console.log(row.join(''));
+  });
 };
 
 export default day9;
