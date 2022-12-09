@@ -32,7 +32,7 @@ export const day9part2 = (seriesOfMotions: string): number => {
   return 13;
 };
 
-const createInitialState = (): Array<Array<PositionState>> => {
+export const createInitialState = (): Array<Array<PositionState>> => {
   const spaceHeight = 5;
   const spaceWidth = 6;
   const initialState = new Array(spaceHeight);
@@ -50,7 +50,7 @@ const createInitialState = (): Array<Array<PositionState>> => {
   return initialState;
 };
 
-const parseMoves = (seriesOfMotions: string): Array<Move> => {
+export const parseMoves = (seriesOfMotions: string): Array<Move> => {
   return seriesOfMotions
     .replace(/\r/g, '')
     .split(`\n`)
@@ -74,7 +74,7 @@ const parseMoves = (seriesOfMotions: string): Array<Move> => {
     });
 };
 
-const moveHead = (state: Array<Array<PositionState>>, move: Move) => {
+export const moveHead = (state: Array<Array<PositionState>>, move: Move) => {
   let initialRow;
   let initialCell;
   state.forEach((row, rowIndex) =>
