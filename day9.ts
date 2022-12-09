@@ -3,6 +3,7 @@ interface PositionState {
   head: boolean;
   tails: boolean;
   visited: boolean;
+  tailParts: Array<boolean>;
 }
 
 enum Direction {
@@ -26,11 +27,25 @@ export const day9 = (seriesOfMotions: string): number => {
   const moves = parseMoves(seriesOfMotions);
   // apply moves
   moves.forEach((move, i) => {
-    if (i > 1600) console.log(move, i);
+    //console.log(move, i);
     moveHead(state, move);
     //printState(state);
-    moveTails(state);
-    if (i > 1600) printState(state);
+    const headPos = { row: 0, cell: 0 };
+    const tailsPos = { row: 0, cell: 0 };
+    state.forEach((row, rowIndex) =>
+      row.forEach((cell, cellIndex) => {
+        if (cell.head) {
+          headPos.row = rowIndex;
+          headPos.cell = cellIndex;
+        }
+        if (cell.tails) {
+          tailsPos.row = rowIndex;
+          tailsPos.cell = cellIndex;
+        }
+      })
+    );
+    moveTails(state, headPos, tailsPos, true);
+    //if (i > 1600) printState(state);
   });
   const visitedCount = state.reduce(
     (sum, row) =>
@@ -41,14 +56,47 @@ export const day9 = (seriesOfMotions: string): number => {
 };
 
 export const day9part2 = (seriesOfMotions: string): number => {
-  return 13;
+  const state = createInitialState();
+  const moves = parseMoves(seriesOfMotions);
+  // apply moves
+  moves.forEach((move, i) => {
+    console.log(move, i);
+    moveHead(state, move);
+    printState(state);
+    // TODO: Move 7 other parts
+
+    const headPos = { row: 0, cell: 0 };
+    const tailsPos = { row: 0, cell: 0 };
+    state.forEach((row, rowIndex) =>
+      row.forEach((cell, cellIndex) => {
+        if (cell.head) {
+          headPos.row = rowIndex;
+          headPos.cell = cellIndex;
+        }
+        if (cell.tailParts[0]) {
+          tailsPos.row = rowIndex;
+          tailsPos.cell = cellIndex;
+        }
+      })
+    );
+
+    //movePart(state, headPos, tailsPos, false, 0);
+    moveTails(state, headPos, tailsPos);
+    //if (i > 1600) printState(state);
+  });
+  const visitedCount = state.reduce(
+    (sum, row) =>
+      sum + row.reduce((sum2, cell) => sum2 + (cell.visited ? 1 : 0), 0),
+    0
+  );
+  return visitedCount;
 };
 
 export const createInitialState = (): Array<Array<PositionState>> => {
   // const spaceHeight = 5;
   // const spaceWidth = 6;
   const spaceHeight = 250;
-  const spaceWidth = 450;
+  const spaceWidth = 400;
   const initialState = new Array(spaceHeight);
   for (let i = 0; i < initialState.length; i++) {
     const row = new Array(spaceWidth);
@@ -65,7 +113,26 @@ export const createInitialState = (): Array<Array<PositionState>> => {
   initialState[startRow][startCell].head = true;
   initialState[startRow][startCell].tails = true;
   initialState[startRow][startCell].visited = true;
+  const otherParts = new Array(7);
+  for (let i = 0; i < otherParts.length; i++) {
+    otherParts[i] = false;
+  }
+  initialState[startRow][startCell].otherParts = otherParts;
   return initialState;
+};
+
+export const createInitialPositionState = () => {
+  const otherParts = new Array(7);
+  for (let i = 0; i < otherParts.length; i++) {
+    otherParts[i] = false;
+  }
+  return {
+    start: false,
+    head: false,
+    tails: false,
+    visited: false,
+    otherParts,
+  };
 };
 
 export const parseMoves = (seriesOfMotions: string): Array<Move> => {
@@ -124,23 +191,15 @@ export const moveHead = (state: Array<Array<PositionState>>, move: Move) => {
   state[finalRow][finalCell].head = true;
 };
 
-export const moveTails = (state: Array<Array<PositionState>>) => {
-  let headRow;
-  let headCell;
-  let tailsRow;
-  let tailsCell;
-  state.forEach((row, rowIndex) =>
-    row.forEach((cell, cellIndex) => {
-      if (cell.head) {
-        headRow = rowIndex;
-        headCell = cellIndex;
-      }
-      if (cell.tails) {
-        tailsRow = rowIndex;
-        tailsCell = cellIndex;
-      }
-    })
-  );
+export const moveTails = (
+  state: Array<Array<PositionState>>,
+  headPos: Position,
+  tailsPos: Position
+) => {
+  let headRow = headPos.row;
+  let headCell = headPos.cell;
+  let tailsRow = tailsPos.row;
+  let tailsCell = tailsPos.cell;
 
   if (
     Math.abs(headRow - tailsRow) <= 1 &&
@@ -155,7 +214,8 @@ export const moveTails = (state: Array<Array<PositionState>>) => {
       tailsRow,
       tailsCell,
       headRow,
-      headCell
+      headCell,
+      true
     );
     tailsRow = modifiedTailsPos.row;
     tailsCell = modifiedTailsPos.cell;
@@ -167,7 +227,7 @@ export const moveTails = (state: Array<Array<PositionState>>) => {
     return;
   }
 
-  directionalMove(state, tailsRow, tailsCell, headRow, headCell);
+  directionalMove(state, tailsRow, tailsCell, headRow, headCell, true);
 };
 
 const diagonalMove = (
@@ -175,9 +235,10 @@ const diagonalMove = (
   tailsRow,
   tailsCell,
   headRow,
-  headCell
+  headCell,
+  markVisited
 ): Position => {
-  state[tailsRow][tailsCell].visited = true;
+  if (markVisited) state[tailsRow][tailsCell].visited = true;
   state[tailsRow][tailsCell].tails = false;
 
   // upleft
@@ -204,7 +265,14 @@ const diagonalMove = (
   return { row: tailsRow, cell: tailsCell };
 };
 
-const directionalMove = (state, tailsRow, tailsCell, headRow, headCell) => {
+const directionalMove = (
+  state,
+  tailsRow,
+  tailsCell,
+  headRow,
+  headCell,
+  markVisited
+) => {
   state[tailsRow][tailsCell].tails = false;
   // Do directional move
   if (headRow === tailsRow) {
@@ -212,13 +280,13 @@ const directionalMove = (state, tailsRow, tailsCell, headRow, headCell) => {
     if (headCell < tailsCell) {
       //left
       for (let i = 0; i < distanceMoved; i++) {
-        state[tailsRow][tailsCell - i].visited = true;
+        if (markVisited) state[tailsRow][tailsCell - i].visited = true;
       }
       tailsCell = headCell + 1;
     } else {
       //right
       for (let i = 0; i < distanceMoved; i++) {
-        state[tailsRow][tailsCell + i].visited = true;
+        if (markVisited) state[tailsRow][tailsCell + i].visited = true;
       }
       tailsCell = headCell - 1;
     }
@@ -228,13 +296,13 @@ const directionalMove = (state, tailsRow, tailsCell, headRow, headCell) => {
     if (headRow < tailsRow) {
       //up
       for (let i = 0; i < distanceMoved; i++) {
-        state[tailsRow - i][tailsCell].visited = true;
+        if (markVisited) state[tailsRow - i][tailsCell].visited = true;
       }
       tailsRow = headRow + 1;
     } else {
       //down
       for (let i = 0; i < distanceMoved; i++) {
-        state[tailsRow + i][tailsCell].visited = true;
+        if (markVisited) state[tailsRow + i][tailsCell].visited = true;
       }
       tailsRow = headRow - 1;
     }
@@ -242,22 +310,13 @@ const directionalMove = (state, tailsRow, tailsCell, headRow, headCell) => {
   state[tailsRow][tailsCell].tails = true;
 };
 
-export const createInitialPositionState = () => {
-  return { start: false, head: false, tails: false, visited: false };
-};
-
 const printState = (state: Array<Array<PositionState>>) => {
   const markedMatrix = state.map((row) =>
     row.map((cell, i) =>
-      i > 100 && i < 350
-        ? ''
-        : cell.head
-        ? 'H'
-        : cell.tails
-        ? 'T'
-        : cell.visited
-        ? '#'
-        : '.'
+      // i > 100 && i < 350
+      //   ? ''
+      //   :
+      cell.head ? 'H' : cell.tails ? 'T' : cell.visited ? '#' : '.'
     )
   );
   console.log('state:');
