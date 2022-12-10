@@ -3,7 +3,7 @@ interface PositionState {
   head: boolean;
   tails: boolean;
   visited: boolean;
-  tailParts: Array<boolean>;
+  otherParts: Array<boolean>;
 }
 
 enum Direction {
@@ -23,7 +23,7 @@ interface Position {
 }
 
 export const day9 = (seriesOfMotions: string): number => {
-  const state = createInitialState();
+  const state = createInitialState(0);
   const moves = parseMoves(seriesOfMotions);
   // apply moves
   moves.forEach((move, i) => {
@@ -44,43 +44,6 @@ export const day9 = (seriesOfMotions: string): number => {
         }
       })
     );
-    moveTails(state, headPos, tailsPos, true);
-    //if (i > 1600) printState(state);
-  });
-  const visitedCount = state.reduce(
-    (sum, row) =>
-      sum + row.reduce((sum2, cell) => sum2 + (cell.visited ? 1 : 0), 0),
-    0
-  );
-  return visitedCount;
-};
-
-export const day9part2 = (seriesOfMotions: string): number => {
-  const state = createInitialState();
-  const moves = parseMoves(seriesOfMotions);
-  // apply moves
-  moves.forEach((move, i) => {
-    console.log(move, i);
-    moveHead(state, move);
-    printState(state);
-    // TODO: Move 7 other parts
-
-    const headPos = { row: 0, cell: 0 };
-    const tailsPos = { row: 0, cell: 0 };
-    state.forEach((row, rowIndex) =>
-      row.forEach((cell, cellIndex) => {
-        if (cell.head) {
-          headPos.row = rowIndex;
-          headPos.cell = cellIndex;
-        }
-        if (cell.tailParts[0]) {
-          tailsPos.row = rowIndex;
-          tailsPos.cell = cellIndex;
-        }
-      })
-    );
-
-    //movePart(state, headPos, tailsPos, false, 0);
     moveTails(state, headPos, tailsPos);
     //if (i > 1600) printState(state);
   });
@@ -92,37 +55,210 @@ export const day9part2 = (seriesOfMotions: string): number => {
   return visitedCount;
 };
 
-export const createInitialState = (): Array<Array<PositionState>> => {
+export const day9part2 = (seriesOfMotions: string): number => {
+  const state = createInitialState(10);
+  const moves = parseMoves(seriesOfMotions);
+  // apply moves
+  moves.forEach((move, i) => {
+    //if (i < 10)
+    console.log(move, i);
+    moveHead(state, move);
+
+    const headPos = { row: 0, cell: 0 };
+    const tailsPos = { row: -1, cell: -1 };
+    let partNo = 0;
+    state.forEach((row, rowIndex) =>
+      row.forEach((cell, cellIndex) => {
+        if (cell.head) {
+          headPos.row = rowIndex;
+          headPos.cell = cellIndex;
+        }
+
+        if (cell.otherParts[0]) {
+          tailsPos.row = rowIndex;
+          tailsPos.cell = cellIndex;
+        }
+      })
+    );
+    movePart(state, headPos, tailsPos, partNo);
+
+    partNo = 1;
+    state.forEach((row, rowIndex) =>
+      row.forEach((cell, cellIndex) => {
+        if (cell.otherParts[partNo - 1]) {
+          headPos.row = rowIndex;
+          headPos.cell = cellIndex;
+        }
+        if (cell.otherParts[partNo]) {
+          tailsPos.row = rowIndex;
+          tailsPos.cell = cellIndex;
+        }
+      })
+    );
+    movePart(state, headPos, tailsPos, partNo);
+
+    partNo = 2;
+    state.forEach((row, rowIndex) =>
+      row.forEach((cell, cellIndex) => {
+        if (cell.otherParts[partNo - 1]) {
+          headPos.row = rowIndex;
+          headPos.cell = cellIndex;
+        }
+        if (cell.otherParts[partNo]) {
+          tailsPos.row = rowIndex;
+          tailsPos.cell = cellIndex;
+        }
+      })
+    );
+    movePart(state, headPos, tailsPos, partNo);
+
+    partNo = 3;
+    state.forEach((row, rowIndex) =>
+      row.forEach((cell, cellIndex) => {
+        if (cell.otherParts[partNo - 1]) {
+          headPos.row = rowIndex;
+          headPos.cell = cellIndex;
+        }
+        if (cell.otherParts[partNo]) {
+          tailsPos.row = rowIndex;
+          tailsPos.cell = cellIndex;
+        }
+      })
+    );
+    movePart(state, headPos, tailsPos, partNo);
+
+    partNo = 4;
+    state.forEach((row, rowIndex) =>
+      row.forEach((cell, cellIndex) => {
+        if (cell.otherParts[partNo - 1]) {
+          headPos.row = rowIndex;
+          headPos.cell = cellIndex;
+        }
+        if (cell.otherParts[partNo]) {
+          tailsPos.row = rowIndex;
+          tailsPos.cell = cellIndex;
+        }
+      })
+    );
+    movePart(state, headPos, tailsPos, partNo);
+
+    partNo = 5;
+    state.forEach((row, rowIndex) =>
+      row.forEach((cell, cellIndex) => {
+        if (cell.otherParts[partNo - 1]) {
+          headPos.row = rowIndex;
+          headPos.cell = cellIndex;
+        }
+        if (cell.otherParts[partNo]) {
+          tailsPos.row = rowIndex;
+          tailsPos.cell = cellIndex;
+        }
+      })
+    );
+    movePart(state, headPos, tailsPos, partNo);
+
+    partNo = 6;
+    state.forEach((row, rowIndex) =>
+      row.forEach((cell, cellIndex) => {
+        if (cell.otherParts[partNo - 1]) {
+          headPos.row = rowIndex;
+          headPos.cell = cellIndex;
+        }
+        if (cell.otherParts[partNo]) {
+          tailsPos.row = rowIndex;
+          tailsPos.cell = cellIndex;
+        }
+      })
+    );
+    movePart(state, headPos, tailsPos, partNo);
+
+    partNo = 7;
+    state.forEach((row, rowIndex) =>
+      row.forEach((cell, cellIndex) => {
+        if (cell.otherParts[partNo - 1]) {
+          headPos.row = rowIndex;
+          headPos.cell = cellIndex;
+        }
+        if (cell.otherParts[partNo]) {
+          tailsPos.row = rowIndex;
+          tailsPos.cell = cellIndex;
+        }
+      })
+    );
+    movePart(state, headPos, tailsPos, partNo);
+
+    state.forEach((row, rowIndex) =>
+      row.forEach((cell, cellIndex) => {
+        if (cell.otherParts[7]) {
+          headPos.row = rowIndex;
+          headPos.cell = cellIndex;
+        }
+        if (cell.tails) {
+          tailsPos.row = rowIndex;
+          tailsPos.cell = cellIndex;
+        }
+      })
+    );
+    moveTails(state, headPos, tailsPos);
+    if (i > 1950) printState(state, 10);
+  });
+  printState(state, 10);
+  const visitedCount = state.reduce(
+    (sum, row) =>
+      sum + row.reduce((sum2, cell) => sum2 + (cell.visited ? 1 : 0), 0),
+    0
+  );
+  return visitedCount;
+};
+
+export const createInitialState = (
+  knotCount: number
+): Array<Array<PositionState>> => {
   // const spaceHeight = 5;
   // const spaceWidth = 6;
+  // const spaceHeight = 75;
+  // const spaceWidth = 200;
   const spaceHeight = 250;
   const spaceWidth = 400;
   const initialState = new Array(spaceHeight);
   for (let i = 0; i < initialState.length; i++) {
     const row = new Array(spaceWidth);
     for (let j = 0; j < row.length; j++) {
-      row[j] = createInitialPositionState();
+      row[j] = createInitialPositionState(knotCount);
     }
     initialState[i] = row;
   }
   // const startRow = spaceHeight - 1;
   // const startCell = 0;
+  // const startRow = 25;
+  // const startCell = 25;
   const startRow = 50;
   const startCell = 300;
   initialState[startRow][startCell].start = true;
   initialState[startRow][startCell].head = true;
   initialState[startRow][startCell].tails = true;
   initialState[startRow][startCell].visited = true;
-  const otherParts = new Array(7);
-  for (let i = 0; i < otherParts.length; i++) {
-    otherParts[i] = false;
+  if (knotCount > 2) {
+    const otherParts = new Array(knotCount - 2);
+    for (let i = 0; i < otherParts.length; i++) {
+      otherParts[i] = true;
+    }
+    initialState[startRow][startCell].otherParts = otherParts;
   }
-  initialState[startRow][startCell].otherParts = otherParts;
   return initialState;
 };
 
-export const createInitialPositionState = () => {
-  const otherParts = new Array(7);
+export const createInitialPositionState = (knotCount: number) => {
+  if (knotCount <= 2) {
+    return {
+      start: false,
+      head: false,
+      tails: false,
+      visited: false,
+      otherParts: [],
+    };
+  }
+  const otherParts = new Array(knotCount - 2);
   for (let i = 0; i < otherParts.length; i++) {
     otherParts[i] = false;
   }
@@ -131,7 +267,7 @@ export const createInitialPositionState = () => {
     head: false,
     tails: false,
     visited: false,
-    otherParts,
+    otherParts: otherParts,
   };
 };
 
@@ -215,7 +351,8 @@ export const moveTails = (
       tailsCell,
       headRow,
       headCell,
-      true
+      true,
+      -10
     );
     tailsRow = modifiedTailsPos.row;
     tailsCell = modifiedTailsPos.cell;
@@ -227,7 +364,47 @@ export const moveTails = (
     return;
   }
 
-  directionalMove(state, tailsRow, tailsCell, headRow, headCell, true);
+  directionalMove(state, tailsRow, tailsCell, headRow, headCell, true, -10);
+};
+export const movePart = (
+  state: Array<Array<PositionState>>,
+  headPos: Position,
+  tailsPos: Position,
+  partNo: number
+) => {
+  let headRow = headPos.row;
+  let headCell = headPos.cell;
+  let tailsRow = tailsPos.row;
+  let tailsCell = tailsPos.cell;
+
+  if (
+    Math.abs(headRow - tailsRow) <= 1 &&
+    Math.abs(headCell - tailsCell) <= 1
+  ) {
+    return;
+  }
+
+  if (headRow !== tailsRow && headCell !== tailsCell) {
+    const modifiedTailsPos = diagonalMove(
+      state,
+      tailsRow,
+      tailsCell,
+      headRow,
+      headCell,
+      false,
+      partNo
+    );
+    tailsRow = modifiedTailsPos.row;
+    tailsCell = modifiedTailsPos.cell;
+  }
+  if (
+    Math.abs(headRow - tailsRow) <= 1 &&
+    Math.abs(headCell - tailsCell) <= 1
+  ) {
+    return;
+  }
+
+  directionalMove(state, tailsRow, tailsCell, headRow, headCell, false, partNo);
 };
 
 const diagonalMove = (
@@ -236,10 +413,15 @@ const diagonalMove = (
   tailsCell,
   headRow,
   headCell,
-  markVisited
+  markVisited: boolean,
+  partNo: number | undefined
 ): Position => {
   if (markVisited) state[tailsRow][tailsCell].visited = true;
-  state[tailsRow][tailsCell].tails = false;
+  if (partNo >= 0) {
+    state[tailsRow][tailsCell].otherParts[partNo] = false;
+  } else {
+    state[tailsRow][tailsCell].tails = false;
+  }
 
   // upleft
   if (headRow < tailsRow && headCell < tailsCell) {
@@ -261,7 +443,11 @@ const diagonalMove = (
     tailsRow = tailsRow + 1;
     tailsCell = tailsCell - 1;
   }
-  state[tailsRow][tailsCell].tails = true;
+  if (partNo >= 0) {
+    state[tailsRow][tailsCell].otherParts[partNo] = true;
+  } else {
+    state[tailsRow][tailsCell].tails = true;
+  }
   return { row: tailsRow, cell: tailsCell };
 };
 
@@ -271,9 +457,14 @@ const directionalMove = (
   tailsCell,
   headRow,
   headCell,
-  markVisited
+  markVisited: boolean,
+  partNo: number | undefined
 ) => {
-  state[tailsRow][tailsCell].tails = false;
+  if (partNo >= 0) {
+    state[tailsRow][tailsCell].otherParts[partNo] = false;
+  } else {
+    state[tailsRow][tailsCell].tails = false;
+  }
   // Do directional move
   if (headRow === tailsRow) {
     const distanceMoved = Math.abs(headCell - tailsCell);
@@ -307,16 +498,39 @@ const directionalMove = (
       tailsRow = headRow - 1;
     }
   }
-  state[tailsRow][tailsCell].tails = true;
+  if (partNo >= 0) {
+    state[tailsRow][tailsCell].otherParts[partNo] = true;
+  } else {
+    state[tailsRow][tailsCell].tails = true;
+  }
 };
 
-const printState = (state: Array<Array<PositionState>>) => {
+const printState = (state: Array<Array<PositionState>>, knotCount: number) => {
+  // const markedMatrix = state.map((row) =>
+  //   row.map((cell, i) =>
+  //     // i > 100 && i < 350
+  //     //   ? ''
+  //     //   :
+  //     cell.head ? 'H' : cell.tails ? 'T' : cell.visited ? '#' : '.'
+  //   )
+  // );
   const markedMatrix = state.map((row) =>
     row.map((cell, i) =>
       // i > 100 && i < 350
       //   ? ''
       //   :
-      cell.head ? 'H' : cell.tails ? 'T' : cell.visited ? '#' : '.'
+      // i < 150 && i > 300
+      //   ? ''
+      //   :
+      cell.head
+        ? 'H'
+        : cell.tails
+        ? 'T'
+        : cell.visited
+        ? '#'
+        : cell.otherParts.some((p) => p)
+        ? knotCount - 2 - [...cell.otherParts].reverse().findIndex((p) => p)
+        : '.'
     )
   );
   console.log('state:');

@@ -38,5 +38,5 @@ const input = fs.readFileSync(`./inputs/day${day}input`, 'utf-8');
 // console.log('Day8 answer: ', day8(input));
 // console.log('Day8 part2 answer: ', day8part2(input));
 
-console.log('Day9 answer: ', day9(input));
+// console.log('Day9 answer: ', day9(input));
 console.log('Day9 part2 answer: ', day9part2(input));
