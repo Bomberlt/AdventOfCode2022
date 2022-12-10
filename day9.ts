@@ -344,7 +344,7 @@ export const moveTails = (
     return;
   }
 
-  if (headRow !== tailsRow && headCell !== tailsCell) {
+  while (headRow !== tailsRow && headCell !== tailsCell) {
     const modifiedTailsPos = diagonalMove(
       state,
       tailsRow,
@@ -384,7 +384,7 @@ export const movePart = (
     return;
   }
 
-  if (headRow !== tailsRow && headCell !== tailsCell) {
+  while (headRow !== tailsRow && headCell !== tailsCell) {
     const modifiedTailsPos = diagonalMove(
       state,
       tailsRow,
