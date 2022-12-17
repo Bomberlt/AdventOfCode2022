@@ -62,144 +62,8 @@ export const day9part2 = (seriesOfMotions: string): number => {
   moves.forEach((move, i) => {
     //if (i < 10)
     console.log(move, i);
-    moveHead(state, move);
+    moveHeadAndParts(state, move);
 
-    const headPos = { row: 0, cell: 0 };
-    const tailsPos = { row: -1, cell: -1 };
-    let partNo = 0;
-    state.forEach((row, rowIndex) =>
-      row.forEach((cell, cellIndex) => {
-        if (cell.head) {
-          headPos.row = rowIndex;
-          headPos.cell = cellIndex;
-        }
-
-        if (cell.otherParts[0]) {
-          tailsPos.row = rowIndex;
-          tailsPos.cell = cellIndex;
-        }
-      })
-    );
-    movePart(state, headPos, tailsPos, partNo);
-
-    partNo = 1;
-    state.forEach((row, rowIndex) =>
-      row.forEach((cell, cellIndex) => {
-        if (cell.otherParts[partNo - 1]) {
-          headPos.row = rowIndex;
-          headPos.cell = cellIndex;
-        }
-        if (cell.otherParts[partNo]) {
-          tailsPos.row = rowIndex;
-          tailsPos.cell = cellIndex;
-        }
-      })
-    );
-    movePart(state, headPos, tailsPos, partNo);
-
-    partNo = 2;
-    state.forEach((row, rowIndex) =>
-      row.forEach((cell, cellIndex) => {
-        if (cell.otherParts[partNo - 1]) {
-          headPos.row = rowIndex;
-          headPos.cell = cellIndex;
-        }
-        if (cell.otherParts[partNo]) {
-          tailsPos.row = rowIndex;
-          tailsPos.cell = cellIndex;
-        }
-      })
-    );
-    movePart(state, headPos, tailsPos, partNo);
-
-    partNo = 3;
-    state.forEach((row, rowIndex) =>
-      row.forEach((cell, cellIndex) => {
-        if (cell.otherParts[partNo - 1]) {
-          headPos.row = rowIndex;
-          headPos.cell = cellIndex;
-        }
-        if (cell.otherParts[partNo]) {
-          tailsPos.row = rowIndex;
-          tailsPos.cell = cellIndex;
-        }
-      })
-    );
-    movePart(state, headPos, tailsPos, partNo);
-
-    partNo = 4;
-    state.forEach((row, rowIndex) =>
-      row.forEach((cell, cellIndex) => {
-        if (cell.otherParts[partNo - 1]) {
-          headPos.row = rowIndex;
-          headPos.cell = cellIndex;
-        }
-        if (cell.otherParts[partNo]) {
-          tailsPos.row = rowIndex;
-          tailsPos.cell = cellIndex;
-        }
-      })
-    );
-    movePart(state, headPos, tailsPos, partNo);
-
-    partNo = 5;
-    state.forEach((row, rowIndex) =>
-      row.forEach((cell, cellIndex) => {
-        if (cell.otherParts[partNo - 1]) {
-          headPos.row = rowIndex;
-          headPos.cell = cellIndex;
-        }
-        if (cell.otherParts[partNo]) {
-          tailsPos.row = rowIndex;
-          tailsPos.cell = cellIndex;
-        }
-      })
-    );
-    movePart(state, headPos, tailsPos, partNo);
-
-    partNo = 6;
-    state.forEach((row, rowIndex) =>
-      row.forEach((cell, cellIndex) => {
-        if (cell.otherParts[partNo - 1]) {
-          headPos.row = rowIndex;
-          headPos.cell = cellIndex;
-        }
-        if (cell.otherParts[partNo]) {
-          tailsPos.row = rowIndex;
-          tailsPos.cell = cellIndex;
-        }
-      })
-    );
-    movePart(state, headPos, tailsPos, partNo);
-
-    partNo = 7;
-    state.forEach((row, rowIndex) =>
-      row.forEach((cell, cellIndex) => {
-        if (cell.otherParts[partNo - 1]) {
-          headPos.row = rowIndex;
-          headPos.cell = cellIndex;
-        }
-        if (cell.otherParts[partNo]) {
-          tailsPos.row = rowIndex;
-          tailsPos.cell = cellIndex;
-        }
-      })
-    );
-    movePart(state, headPos, tailsPos, partNo);
-
-    state.forEach((row, rowIndex) =>
-      row.forEach((cell, cellIndex) => {
-        if (cell.otherParts[7]) {
-          headPos.row = rowIndex;
-          headPos.cell = cellIndex;
-        }
-        if (cell.tails) {
-          tailsPos.row = rowIndex;
-          tailsPos.cell = cellIndex;
-        }
-      })
-    );
-    moveTails(state, headPos, tailsPos);
     if (i > 1950) printState(state, 10);
   });
   printState(state, 10);
@@ -325,6 +189,162 @@ export const moveHead = (state: Array<Array<PositionState>>, move: Move) => {
   }
   state[initialRow][initialCell].head = false;
   state[finalRow][finalCell].head = true;
+};
+
+export const moveHeadAndParts = (
+  state: Array<Array<PositionState>>,
+  move: Move
+) => {
+  let initialRow;
+  let initialCell;
+  state.forEach((row, rowIndex) =>
+    row.forEach((cell, cellIndex) => {
+      if (cell.head) {
+        initialRow = rowIndex;
+        initialCell = cellIndex;
+      }
+    })
+  );
+
+  let headRow = initialRow;
+  let headCell = initialCell;
+  switch (move.direction) {
+    case Direction.Left:
+      for (let index = 0; index < move.steps; index++) {
+        state[headRow][headCell].head = false;
+        headCell--;
+        state[headRow][headCell].head = true;
+        movePartsOnce({ row: headRow, cell: headCell }, state);
+      }
+      break;
+    case Direction.Right:
+      for (let index = 0; index < move.steps; index++) {
+        state[headRow][headCell].head = false;
+        headCell++;
+        state[headRow][headCell].head = true;
+        movePartsOnce({ row: headRow, cell: headCell }, state);
+      }
+      break;
+    case Direction.Up:
+      for (let index = 0; index < move.steps; index++) {
+        state[headRow][headCell].head = false;
+        headRow--;
+        state[headRow][headCell].head = true;
+        movePartsOnce({ row: headRow, cell: headCell }, state);
+      }
+      break;
+    case Direction.Down:
+      for (let index = 0; index < move.steps; index++) {
+        state[headRow][headCell].head = false;
+        headRow++;
+        state[headRow][headCell].head = true;
+        movePartsOnce({ row: headRow, cell: headCell }, state);
+      }
+      break;
+  }
+};
+
+export const movePartsOnce = (
+  headPos: Position,
+  state: Array<Array<PositionState>>
+) => {
+  let prevPartPos = movePartOnce(headPos, state, 0);
+  prevPartPos = movePartOnce(prevPartPos, state, 1);
+  prevPartPos = movePartOnce(prevPartPos, state, 2);
+  prevPartPos = movePartOnce(prevPartPos, state, 3);
+  prevPartPos = movePartOnce(prevPartPos, state, 4);
+  prevPartPos = movePartOnce(prevPartPos, state, 5);
+  prevPartPos = movePartOnce(prevPartPos, state, 6);
+  prevPartPos = movePartOnce(prevPartPos, state, 7);
+  prevPartPos = moveTailOnce(prevPartPos, state);
+};
+
+export const movePartOnce = (
+  prevPartPos: Position,
+  state: Array<Array<PositionState>>,
+  partNo: number
+): Position => {
+  const partPos = { row: -1, cell: -1 };
+  state.forEach((row, rowIndex) =>
+    row.forEach((cell, cellIndex) => {
+      if (cell.otherParts[partNo]) {
+        partPos.row = rowIndex;
+        partPos.cell = cellIndex;
+      }
+    })
+  );
+  if (
+    Math.abs(prevPartPos.row - partPos.row) <= 1 &&
+    Math.abs(prevPartPos.cell - partPos.cell) <= 1
+  ) {
+    return partPos;
+  }
+  let modifiedPartPos = { row: -1, cell: -1 };
+  if (prevPartPos.row !== partPos.row && prevPartPos.cell !== partPos.cell) {
+    modifiedPartPos = diagonalMove(
+      state,
+      partPos.row,
+      partPos.cell,
+      prevPartPos.row,
+      prevPartPos.cell,
+      false,
+      partNo
+    );
+  } else {
+    modifiedPartPos = directionalMove(
+      state,
+      partPos.row,
+      partPos.cell,
+      prevPartPos.row,
+      prevPartPos.cell,
+      false,
+      partNo
+    );
+  }
+  return modifiedPartPos;
+};
+export const moveTailOnce = (
+  prevPartPos: Position,
+  state: Array<Array<PositionState>>
+): Position => {
+  const partPos = { row: -1, cell: -1 };
+  state.forEach((row, rowIndex) =>
+    row.forEach((cell, cellIndex) => {
+      if (cell.tails) {
+        partPos.row = rowIndex;
+        partPos.cell = cellIndex;
+      }
+    })
+  );
+  if (
+    Math.abs(prevPartPos.row - partPos.row) <= 1 &&
+    Math.abs(prevPartPos.cell - partPos.cell) <= 1
+  ) {
+    return;
+  }
+  let modifiedPartPos = { row: -1, cell: -1 };
+  if (prevPartPos.row !== partPos.row && prevPartPos.cell !== partPos.cell) {
+    modifiedPartPos = diagonalMove(
+      state,
+      partPos.row,
+      partPos.cell,
+      prevPartPos.row,
+      prevPartPos.cell,
+      true,
+      -1
+    );
+  } else {
+    modifiedPartPos = directionalMove(
+      state,
+      partPos.row,
+      partPos.cell,
+      prevPartPos.row,
+      prevPartPos.cell,
+      true,
+      -1
+    );
+  }
+  return modifiedPartPos;
 };
 
 export const moveTails = (
@@ -471,7 +491,7 @@ const directionalMove = (
   headCell,
   markVisited: boolean,
   partNo: number | undefined
-) => {
+): Position => {
   if (partNo >= 0) {
     state[tailsRow][tailsCell].otherParts[partNo] = false;
   } else {
@@ -515,6 +535,7 @@ const directionalMove = (
   } else {
     state[tailsRow][tailsCell].tails = true;
   }
+  return { row: tailsRow, cell: tailsCell };
 };
 
 const printState = (state: Array<Array<PositionState>>, knotCount: number) => {
